@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        #cookie-glue {
+            box-sizing: border-box;
+            border: 1px solid silver;
+            padding: 0 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: none;
+            background-color: #fff;
+            padding-bottom: 800px;
+        }
+
+        #cookie-glue>ol {
+            margin: 0 0 0 120px;
+        }
+
+        #cookie-glue>ol>li {
+            margin-bottom: 40px;
+            list-style: none;
+        }
+
+        #cookie-glue .toggle-container {
+            position: absolute;
+        }
+
+        #cookie-glue .toggle {
+            cursor: pointer;
+            background: #222;
+            padding: 7px;
+            width: 60px;
+            height: 30px;
+            border-radius: 30px;
+            display: inline-block;
+            position: relative;
+            left: -130px;
+        }
+
+        #cookie-glue .toggle>input {
+            position: absolute;
+            opacity: 0;
+            width: 61px;
+            height: 31px;
+            display: block;
+            cursor: pointer;
+            margin: -1px 0 0 -1px;
+        }
+
+        #cookie-glue .toggle>input:disabled {
+            cursor: not-allowed;
+        }
+
+        #cookie-glue .switch {
+            height: 100%;
+            display: grid;
+            grid-template-columns: 0fr 1fr 1fr;
+            transition: .2s;
+        }
+
+        #cookie-glue .switch::after {
+            content: '';
+            border-radius: 50%;
+            background: #ccc;
+            grid-column: 2;
+            transition: all 200ms;
+        }
+
+        #cookie-glue input:checked+.switch {
+            grid-template-columns: 1fr 1fr 0fr;
+        }
+
+        #cookie-glue input:checked+.switch::after {
+            background-color: #52cf71;
+        }
+
+        #cookie-glue input:disabled+.switch::after {
+            background-color: #666;
+        }
+
+        #cookie-glue h3 {
+            font-size: 1.4em;
+        }
+
+        #cookie-glue button {
+            margin-left: 160px;
+            font-size: 1.2em;
+            background-color: #52cf71;
+            border: none;
+            padding: 0.5em 1em;
+            cursor: pointer;
+        }
+
+        pre {
+            max-width: 100%;
+            overflow: auto;
+        }
+    </style>
+    <script src="cookieglue.js"></script>
+    <script>
+        if (CookieGlue.can('necessary')) {
+            // Necessary Scripts Go Here
+            console.log('Cookie Glue told me "necessary" is allowed in the header.');
+        }
+
+        if (CookieGlue.can('performance')) {
+            // Performance Scripts Go Here
+            console.log('Cookie Glue told me "performance" is allowed in the header.');
+        }
+
+        if (CookieGlue.can('functionality')) {
+            // Functionality Scripts Go Here
+            console.log('Cookie Glue told me "functionality" is allowed in the header.');
+        }
+
+        if (CookieGlue.can('targeting')) {
+            // Targeting Scripts Go Here
+            console.log('Cookie Glue told me "targeting" is allowed in the header.');
+        }
+    </script>
+</head>
+
+<body>
+    <a href="#fallbackpage" style="text-align: right;display: block;"
+        onclick="document.getElementById('cookie-glue').style.display = 'block'; return false;">Manage Cookie
+        Preferences</a>
+
+    <h1>Example Website</h1>
+
+    <p>The bare-bones requirements for Cookie Glue are...</p>
+
+    <h3>Cookie Glue Container</h3>
+    <p>An element that contains the screen to manage cookie preferences. For example...</p>
+    <pre>
+    &lt;article id="cookie-glue"&gt;...&lt;/article&gt;
+    </pre>
+    <h3>A List of Cookie Types</h3>
+    <p>An ordered list of cookie types that contain checkbox inputs for the user preferences. For example...</p>
+    <pre>
+    &lt;ol&gt;
+        &lt;li data-cookie-type="on-mandatory"&gt;
+            &lt;input type="checkbox" name="necessary" id="cg-necessary" /&gt;
+            &lt;h3&gt;&lt;label for="cg-necessary">Title&lt;/label&gt;&lt;/h3&gt;
+            &lt;p&gt;Description of data and processing.&lt;/p&gt;
+        &lt;/li&gt;
+    &lt;ol&gt;
+    </pre>
+    <p>The list item <em>must</em> have a <code>data-cookie-type</code> of either <code>on-mandatory</code>, <code>on-optional</code>, or <code>off-optional</code></p>
+    <p>The checkbox <em>must</em> have a name. This is the name you will use when checking if you can write out scripts.</p>
+    <h3>Store Button</h3>
+    <p>A button for the user to store their preferneces.</p>
+    <pre>
+    &lt;button id="cookie-glue-store"&gt;Save Preferences&lt;/button&gt;
+    </pre>
+
+    <h3>Minimal Example</h3>
+    <p>See the <a href="/simple.html">fully working simple version</a>.</p>
+    <pre>
+    &lt;article id="cookie-glue"&gt;
+        &lt;h2&gt;Cookie Preferences&lt;/h2&gt;
+        &lt;ol&gt;
+            &lt;li data-cookie-type="on-mandatory"&gt;
+                &lt;input type="checkbox" name="necessary" id="cg-necessary" /&gt;
+                &lt;h3&gt;&lt;label for="cg-necessary"&gt;Necessary Cookies&lt;/label&gt;&lt;/h3&gt;
+                &lt;p&gt;Description.&lt;/p&gt;
+            &lt;/li&gt;
+            &lt;li data-cookie-type="on-optional"&gt;
+                &lt;input type="checkbox" name="performance" id="cg-performance" /&gt;
+                &lt;h3&gt;&lt;label for="cg-performance"&gt;Performance Cookies&lt;/label&gt;&lt;/h3&gt;
+                &lt;p&gt;Description.&lt;/p&gt;
+            &lt;/li&gt;
+            &lt;li data-cookie-type="on-optional"&gt;
+                &lt;input type="checkbox" name="functionality" id="cg-functionality" /&gt;
+                &lt;h3&gt;&lt;label for="cg-functionality"&gt;Functionality Cookies&lt;/label&gt;&lt;/h3&gt;
+                &lt;p&gt;Description.&lt;/p&gt;
+            &lt;/li&gt;
+            &lt;li data-cookie-type="off-optional"&gt;
+                &lt;input type="checkbox" name="targeting" id="cg-targeting" /&gt;
+                &lt;h3&gt;&lt;label for="cg-targeting"&gt;Targeting and Advertising Cookies&lt;/label&gt;&lt;/h3&gt;
+                &lt;p&gt;Description.&lt;/p&gt;
+            &lt;/li&gt;
+        &lt;/ol&gt;
+
+        &lt;button id="cookie-glue-store"&gt;Save Preferences&lt;/button&gt;
+    &lt;/article&gt;
+    &lt;script src="cookieglue.js"&gt;&lt;/script&gt;
+    </pre>
+    <h3>Writing Out Scripts</h3>
+    <p>Scripts should be added to <code>CookieGlue.can</code> conditions, where the name given to the type of cookie is passed as the argument. For example, "performance" cookies as shown below.</p>
+    <pre>
+        // The scripts in this section will only be 
+        // loaded if the user has given consent for
+        // "performance" cookies
+        if (CookieGlue.can('performance')) {
+            // Performance Scripts Go Here
+            console.log('Cookie Glue told me performance is allowed in the header.');
+
+            // Google Analytics Example
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            CookieGlue.load('https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXXX-1"', function() {
+                gtag('js', new Date());
+                gtag('config', 'UA-XXXXXXXXX-1');
+            });
+
+
+            // GTM Example
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-XXXXXXX');
+        }
+    </pre>
+
+    <article id="cookie-glue">
+        <h2>Cookie Preferences</h2>
+        <ol>
+            <li data-cookie-type="on-mandatory">
+                <div class="toggle-container">
+                    <div class="toggle">
+                        <input type="checkbox" name="necessary" id="cg-necessary" />
+                        <div class="switch"></div>
+                    </div>
+                </div>
+                <h3><label for="cg-necessary">Strictly Necessary Cookies</label></h3>
+                <p>These cookies are essential in letting you move around the website and use its features, such as
+                    accessing secure areas of the website. Without these cookies, services you have asked for such as
+                    vehicle search, cannot be provided.</p>
+            </li>
+            <li data-cookie-type="on-optional">
+                <div class="toggle-container">
+                    <div class="toggle">
+                        <input type="checkbox" name="performance" id="cg-performance" />
+                        <div class="switch"></div>
+                    </div>
+                </div>
+                <h3><label for="cg-performance">Performance Cookies</label></h3>
+                <p>These cookies collect information about how our visitors use the website. For example, it enables us
+                    to know which pages visitors go to most often, and if they get error messages from web pages. These
+                    cookies don’t collect information that identifies a visitor. All information collected by these
+                    cookies is aggregated and therefore anonymous. It is only ever used to improve how our website
+                    works.</p>
+            </li>
+            <li data-cookie-type="on-optional">
+                <div class="toggle-container">
+                    <div class="toggle">
+                        <input type="checkbox" name="functionality" id="cg-functionality" />
+                        <div class="switch"></div>
+                    </div>
+                </div>
+                <h3><label for="cg-functionality">Functionality Cookies</label></h3>
+                <p>These cookies allow the website to remember any choices you make. This could include your user name,
+                    language or the region you are in, and provide more enhanced, and personal features. For instance, a
+                    website may be able to provide you with local weather reports or traffic news by storing in a cookie
+                    the region in which you are currently located. These cookies can also be used to remember changes
+                    you have made to text size, fonts and other parts of web pages that you’ve customised.</p>
+                <p>They may also be used to provide services you have asked for, such as watching a video or commenting
+                    on a blog. Information collected by these cookies collect may be anonymised and therefore cannot
+                    track your browsing activity on other websites.</p>
+            </li>
+            <li data-cookie-type="off-optional">
+                <div class="toggle-container">
+                    <div class="toggle">
+                        <input type="checkbox" name="targeting" id="cg-targeting" />
+                        <div class="switch"></div>
+                    </div>
+                </div>
+                <h3><label for="cg-targeting">Targeting and Advertising Cookies</label></h3>
+                <p>These cookies are used to deliver adverts more relevant and suited to you and your interests. They’re
+                    also used to limit the number of times you see an advertisement as well as help measure the
+                    effectiveness of the advertising campaign. They are usually placed by advertising networks with the
+                    website operator’s permission. They remember what websites you have visited and this information is
+                    shared with other organisations such as advertisers. Quite often, targeting cookies will be linked
+                    to site functionality provided by the other organisation.</p>
+                <p>Some of our Web pages may contain electronic images known as Web Beacons (sometimes known as clear
+                    gifs) that allow us to count then number of users who have visited these pages.</p>
+                <p>Web Beacons collect only limited information, these include a cookie number; the time and date of a
+                    page view, and a description of the page where the Web Beacon resides.</p>
+                <p>We may also carry Web Beacons that are placed by third party advertisers. These Beacons do not carry
+                    any personally identifiable information and are only used to track the level of effectiveness of a
+                    particular campaign.</p>
+            </li>
+        </ol>
+
+        <button id="cookie-glue-store">Save Preferences</button>
+    </article>
+
+    <script>
+        if (CookieGlue.can('necessary')) {
+            // Necessary Scripts Go Here
+            console.log('Cookie Glue told me "necessary" is allowed in the footer.');
+        }
+
+        if (CookieGlue.can('performance')) {
+            // Performance Scripts Go Here
+            console.log('Cookie Glue told me "performance" is allowed in the footer.');
+        }
+
+        if (CookieGlue.can('functionality')) {
+            // Functionality Scripts Go Here
+            console.log('Cookie Glue told me "functionality" is allowed in the footer.');
+        }
+
+        if (CookieGlue.can('targeting')) {
+            // Targeting Scripts Go Here
+            console.log('Cookie Glue told me "targeting" is allowed in the footer.');
+        }
+    </script>
+</body>
+
+</html>
