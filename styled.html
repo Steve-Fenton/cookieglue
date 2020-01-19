@@ -2,6 +2,16 @@
 <html>
 <head>
     <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: normal;
+            font-style: italic;
+        }
+
         .cookie-glue-container {
             box-sizing: border-box;
             border: 1px solid silver;
@@ -17,6 +27,84 @@
             padding: 10px;
             max-height: calc(100vh - 20px);
             overflow: auto;
+        }
+
+        .cookie-glue-container ol {
+            margin: 0 0 0 120px;
+        }
+
+        .cookie-glue-container ol>li {
+            margin-bottom: 40px;
+            list-style: none;
+        }
+
+        .cookie-glue-container .toggle-container {
+            position: absolute;
+        }
+
+        .cookie-glue-container .toggle {
+            cursor: pointer;
+            background: #222;
+            padding: 7px;
+            width: 60px;
+            height: 30px;
+            border-radius: 30px;
+            display: inline-block;
+            position: relative;
+            left: -130px;
+        }
+
+        .cookie-glue-container .toggle>input {
+            position: absolute;
+            opacity: 0;
+            width: 61px;
+            height: 31px;
+            display: block;
+            cursor: pointer;
+            margin: -1px 0 0 -1px;
+        }
+
+        .cookie-glue-container .toggle>input:disabled {
+            cursor: not-allowed;
+        }
+
+        .cookie-glue-container .switch {
+            height: 100%;
+            display: grid;
+            grid-template-columns: 0fr 1fr 1fr;
+            transition: .2s;
+        }
+
+        .cookie-glue-container .switch::after {
+            content: '';
+            border-radius: 50%;
+            background: #ccc;
+            grid-column: 2;
+            transition: all 200ms;
+        }
+
+        .cookie-glue-container input:checked+.switch {
+            grid-template-columns: 1fr 1fr 0fr;
+        }
+
+        .cookie-glue-container input:checked+.switch::after {
+            background-color: #52cf71;
+        }
+
+        .cookie-glue-container input:disabled+.switch::after {
+            background-color: #666;
+        }
+
+        .cookie-glue-container h3 {
+            font-size: 1.4em;
+        }
+
+        .cookie-glue-container button {
+            font-size: 1.2em;
+            background-color: #52cf71;
+            border: none;
+            padding: 0.5em 1em;
+            cursor: pointer;
         }
     </style>
     <script src="/dist/cookieglue.js"></script>
@@ -134,7 +222,7 @@
     <article id="cg-notice" class="cookie-glue-container" data-cookie-source="http://localhost:8080/en-GB/notice.txt">
     </article>
 
-    <article id="cg-manage" class="cookie-glue-container"data-cookie-source="http://localhost:8080/en-GB/manage.txt">
+    <article id="cg-manage" class="cookie-glue-container"data-cookie-source="http://localhost:8080/en-GB/manage-detailed.txt">
     </article>
 
     <script>

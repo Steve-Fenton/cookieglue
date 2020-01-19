@@ -1,0 +1,15 @@
+{
+    "name": "cookieglue",
+    "description": "Helps you to implement GDPR or CCPR regulations.",
+    "license": "Apache-2.0",
+    "repository": {
+        "url": "https://github.com/Steve-Fenton/cookieglue"
+    },
+    "author": {
+        "name": "Steve Fenton",
+        "url": "https://www.stevefenton.co.uk/"
+    },
+    "devDependencies": {
+        "typescript": "^3.7.5"
+    }
+}

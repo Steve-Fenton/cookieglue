@@ -1,0 +1,25 @@
+<h2>Cookie Preferences</h2>
+<ol>
+    <li data-cookie-type="on-mandatory">
+        <input type="checkbox" name="necessary" id="cb-necessary" />
+        <h3><label for="cb-necessary">Necessary Cookies</label></h3>
+        <p>Description.</p>
+    </li>
+    <li data-cookie-type="on-optional">
+        <input type="checkbox" name="performance" id="cb-performance" />
+        <h3><label for="cb-performance">Performance Cookies</label></h3>
+        <p>Description.</p>
+    </li>
+    <li data-cookie-type="on-optional">
+        <input type="checkbox" name="functionality" id="cb-functionality" />
+        <h3><label for="cb-functionality">Functionality Cookies</label></h3>
+        <p>Description.</p>
+    </li>
+    <li data-cookie-type="off-optional">
+        <input type="checkbox" name="targeting" id="cb-targeting" />
+        <h3><label for="cb-targeting">Targeting and Advertising Cookies</label></h3>
+        <p>Description.</p>
+    </li>
+</ol>
+
+<button class="cg-store">Save Preferences</button>

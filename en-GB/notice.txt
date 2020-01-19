@@ -1,0 +1,4 @@
+<p>This website uses cookies and similar technologies to improve your online experience and to show tailored
+    advertising to you.</p>
+<button class="cg-manage-opener">Manage</button> <button class="cg-accept">Accept</button>
+<p>You can view our <a href="#">privacy policy</a> for more information.</p>
