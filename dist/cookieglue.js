@@ -12,28 +12,33 @@ var __assign = (this && this.__assign) || function () {
 var CookieGlueDistributor = /** @class */ (function () {
     function CookieGlueDistributor() {
     }
-    CookieGlueDistributor.pageLoaded = function (cookieGlueHtml) {
-        cookieGlueHtml.pageLoaded();
+    CookieGlueDistributor.pageLoaded = function (cookieGlue) {
+        cookieGlue.pageLoaded();
     };
-    CookieGlueDistributor.intentToManage = function (cookieGlueHtml) {
-        cookieGlueHtml.showManager();
+    CookieGlueDistributor.intentToManage = function (cookieGlue) {
+        cookieGlue.showManager(function (container) { return container.style.display = 'block'; });
     };
-    CookieGlueDistributor.intentToAccept = function (cookieGlueHtml) {
-        cookieGlueHtml.accept();
-        cookieGlueHtml.hideContainers();
-        cookieGlueHtml.reload();
+    CookieGlueDistributor.intentToAccept = function (cookieGlue) {
+        cookieGlue.showManager(function (container) {
+            cookieGlue.accept();
+            cookieGlue.hideContainers();
+            cookieGlue.reload();
+        });
     };
-    CookieGlueDistributor.intentToStore = function (cookieGlueHtml) {
-        cookieGlueHtml.store();
-        cookieGlueHtml.hideContainers();
-        cookieGlueHtml.reload();
+    CookieGlueDistributor.intentToStore = function (cookieGlue) {
+        cookieGlue.store();
+        cookieGlue.hideContainers();
+        cookieGlue.reload();
     };
     return CookieGlueDistributor;
 }());
 var CookieGlueApp = /** @class */ (function () {
-    function CookieGlueApp() {
+    function CookieGlueApp(name) {
         var _this_1 = this;
+        if (name === void 0) { name = 'cg'; }
+        this.name = name;
         this.storage = new CookieGlueStorage();
+        this.checkAndRun();
         this.addEvent(window, 'load', function () {
             _this_1.bindButtons();
             CookieGlueDistributor.pageLoaded(_this_1);
@@ -76,6 +81,30 @@ var CookieGlueApp = /** @class */ (function () {
         }
         return result;
     };
+    CookieGlueApp.prototype.checkAndRun = function () {
+        var _this_1 = this;
+        if (!window[this.name] || !window[this.name].data) {
+            console.log('Nothing found registered in a global variable with this name', this.name);
+            return;
+        }
+        // This converts the register into an immediate execution as cookie glue is now loaded
+        var data = window[this.name].data;
+        window[this.name] = {
+            push: function (t, f, d) { if (_this_1.can(t, d))
+                f(); }
+        };
+        for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
+            var item = data_1[_i];
+            try {
+                if (this.can(item.type, item.def)) {
+                    item.script();
+                }
+            }
+            catch (err) {
+                console.error(err);
+            }
+        }
+    };
     CookieGlueApp.prototype.pageLoaded = function () {
         if (!this.storage.isConsentSet()) {
             this.showNotice();
@@ -102,7 +131,7 @@ var CookieGlueApp = /** @class */ (function () {
             container.style.display = 'block';
         }
     };
-    CookieGlueApp.prototype.showManager = function () {
+    CookieGlueApp.prototype.showManager = function (callback) {
         var _this_1 = this;
         this.noticeContainer().style.display = 'none';
         var container = this.manageContainer();
@@ -113,12 +142,12 @@ var CookieGlueApp = /** @class */ (function () {
                 container.innerHTML = response.responseText;
                 _this_1.bindButtons();
                 _this_1.bindPreferencesToUI();
-                container.style.display = 'block';
+                callback(container);
             }, function () { return console.error('cookie-glue - cannot load notice text'); });
         }
         else {
             this.bindPreferencesToUI();
-            container.style.display = 'block';
+            callback(container);
         }
     };
     CookieGlueApp.prototype.accept = function () {
@@ -343,4 +372,4 @@ var Ajax = /** @class */ (function () {
     };
     return Ajax;
 }());
-var CookieGlue = new CookieGlueApp();
+new CookieGlueApp('cg');

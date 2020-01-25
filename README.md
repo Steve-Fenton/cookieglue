@@ -8,7 +8,7 @@ Based on the names you use in the HTML consent management section, you can condi
 
 ## Checklist
 
- - cookieglue.js script added synchronously early in the page
+ - cookieglue.js script added asynchronously on the page
  - notice HTML added, with appropriate text in the appropriate language
  - manage HTML added, with the appropriate text in the appropriate language
 
@@ -28,17 +28,30 @@ Bear in mind that these regulations may have been enacted in a local regulation,
 
 You just need to include one synchronous script (it needs to be synchronous, because you don't know whether you can load other scripts without it - but it's small).
 
-Include this script before all your other scripts
+Include this script on your page.
 
-    <script src="/dist/cookieglue.js"></script>
+    <script async src="/dist/cookieglue.js"></script>
 
 ### Checking Consent Before Loading Scripts
 
-You can now ask Cookie Glue if you have the user's consent to load other scripts.
+You can register any number of scripts to be conditionally run if consent has been granted.
 
-    if (CookieGlue.can('performance')) {
+    // Include this once on your page, inline
+    var cg = window.cg || { data: [], push: function(t,f,d) { if (d == null) d = false; cg.data.push({ type: t, script: f, def: d}); }};
+
+    // Use cg.push to register scripts
+
+    cg.push('necessary', function () {
+        // Some necessary script
+    }, true);
+
+    cg.push('performance', function () {
         // Google Analytics Script Here
-    }
+    });
+
+The normal behaviour of cookie glue is that scripts are not run until consent is obtained. This is the best option for any script that will come under GRPD, etc.
+
+If you have scripts that you want users to be able to reject, but which do not require consent before the first run; you can adjust this behaviour by passing `true` (as shown in the necessary script above) to have scripts run unless consent is removed.
 
 ### Classifying Scripts
 
@@ -54,9 +67,15 @@ What's this "performance" string? We'll talk more about this shortly, but you ca
 
  Cookie Glue runs in Strict Mode by default. That means it won't drop _any_ scripts under it's control until the user has given consent. You can engage lax mode for a script by passing a default value to use if consent has not yet been given. If you have classified your scripts well, you may wish to do this for necessary scripts.
 
-     if (CookieGlue.can('necessary'), true) {
-        // Google Analytics Script Here
-    }
+    // Strict
+    cg.push('necessary', function () {
+        // Some necessary script
+    });
+
+    // LAx
+    cg.push('necessary', function () {
+        // Some necessary script
+    }, true);
 
 Because we passed `true` in the above example, if consent has not yet been obtained, the script will run. When consent is collected later, and the consent is not given for a category, the script will no longer be run. Any cookies stored on the initial run will still be present. This is also true if a user later changes their preferences - it only applies to subsequent page loads.
 

@@ -1,29 +1,32 @@
 class CookieGlueDistributor {
-    static pageLoaded(cookieGlueHtml: CookieGlueApp) {
-        cookieGlueHtml.pageLoaded();
+    static pageLoaded(cookieGlue: CookieGlueApp) {
+        cookieGlue.pageLoaded();
     }
 
-    static intentToManage(cookieGlueHtml: CookieGlueApp) {
-        cookieGlueHtml.showManager();
+    static intentToManage(cookieGlue: CookieGlueApp) {
+        cookieGlue.showManager((container: HTMLElement) => container.style.display = 'block');
     }
 
-    static intentToAccept(cookieGlueHtml: CookieGlueApp) {
-        cookieGlueHtml.accept();
-        cookieGlueHtml.hideContainers();
-        cookieGlueHtml.reload();
+    static intentToAccept(cookieGlue: CookieGlueApp) {
+        cookieGlue.showManager((container) => {
+            cookieGlue.accept();
+            cookieGlue.hideContainers();
+            cookieGlue.reload();
+        });
     }
 
-    static intentToStore(cookieGlueHtml: CookieGlueApp) {
-        cookieGlueHtml.store();
-        cookieGlueHtml.hideContainers();
-        cookieGlueHtml.reload();
+    static intentToStore(cookieGlue: CookieGlueApp) {
+        cookieGlue.store();
+        cookieGlue.hideContainers();
+        cookieGlue.reload();
     }
 }
 
 class CookieGlueApp {
     private storage = new CookieGlueStorage();
 
-    constructor() {
+    constructor(private name: string = 'cg') {
+        this.checkAndRun();
         this.addEvent(window, 'load', () => {
             this.bindButtons();
             CookieGlueDistributor.pageLoaded(this);
@@ -70,6 +73,29 @@ class CookieGlueApp {
         return result;
     }
 
+    public checkAndRun() {
+        if (!window[this.name] || !window[this.name].data) {
+            console.log('Nothing found registered in a global variable with this name', this.name);
+            return;
+        }
+
+        // This converts the register into an immediate execution as cookie glue is now loaded
+        const data = window[this.name].data;
+        window[this.name] = {
+            push: (t: string, f: Function, d: boolean) => { if (this.can(t, d)) f(); }
+        }
+
+        for (const item of data) {
+            try {
+                if (this.can(item.type, item.def)) {
+                    item.script();
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+
     public pageLoaded() {
         if (!this.storage.isConsentSet()) {
             this.showNotice();
@@ -99,7 +125,7 @@ class CookieGlueApp {
         }
     }
 
-    public showManager() {
+    public showManager(callback: (container: HTMLElement) => void) {
         this.noticeContainer().style.display = 'none';
 
         const container = this.manageContainer();
@@ -111,11 +137,11 @@ class CookieGlueApp {
                 container.innerHTML = response.responseText;
                 this.bindButtons();
                 this.bindPreferencesToUI();
-                container.style.display = 'block';
+                callback(container);
             }, () => console.error('cookie-glue - cannot load notice text'));
         } else {
             this.bindPreferencesToUI();
-            container.style.display = 'block';
+            callback(container);
         }
     }
 
@@ -378,4 +404,4 @@ class Ajax {
     }
 }
 
-const CookieGlue = new CookieGlueApp();
+new CookieGlueApp('cg');
