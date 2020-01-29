@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .cookie-glue-container {
+            box-sizing: border-box;
+            border: 1px solid silver;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: none;
+            background-color: #fff;
+            width: calc(100% - 20px);
+            margin: 10px;
+            box-shadow: 5px 5px 10px #666;
+            padding: 10px;
+            max-height: calc(100vh - 20px);
+            overflow: auto;
+        }
+    </style>
+
+    <script>
+        var cg = window.cg || { data: [], push: function (t, f, d) { if (d == null) d = false; cg.data.push({ type: t, script: f, def: d }); } };
+
+        cg.push('necessary', function () {
+            // Necessary Scripts Go Here
+            console.log('Cookie Glue told me necessary is allowed in the header.');
+        }, true);
+
+        cg.push('functionality', function () {
+            // Functionality Scripts Go Here
+            console.log('Cookie Glue told me functionality is allowed in the header.');
+        });
+
+        cg.push('performance', function () {
+            // Performance Scripts Go Here
+            console.log('Cookie Glue told me performance is allowed in the header.');
+        });
+
+        cg.push('targeting', function () {
+            // Targeting Scripts Go Here
+            console.log('Cookie Glue told me targeting is allowed in the header.');
+        });
+    </script>
+</head>
+
+<body>
+    <a href="#fallbackpage" class="cg-manage-opener">Manage Cookie
+        Preferences</a>
+
+    <h1>Example Website</h1>
+    <a href="/index.html">Home</a> | <a href="/styled.html">Styled</a>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at elit eu urna consectetur rhoncus in non nibh.
+        Morbi pretium ac orci nec euismod. Donec vitae lorem dictum, malesuada risus sit amet, vulputate turpis. Nullam
+        at enim eget turpis placerat interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam in nunc
+        erat. Duis sodales commodo tortor, et volutpat lorem maximus nec.</p>
+    <p>Pellentesque id eros diam. Nunc semper odio odio, et egestas arcu mattis nec. Sed et imperdiet arcu, vitae auctor
+        nisl. Nunc nec libero odio. Donec a nisl mauris. Suspendisse et urna eu eros ultrices pellentesque vel nec elit.
+        Praesent molestie suscipit orci et tristique. Praesent sed ipsum a justo luctus ornare.</p>
+    <p>Vivamus ultrices nibh eu porttitor tincidunt. Sed non libero fermentum, dictum lectus a, semper ante. Aenean eget
+        ipsum nulla. Maecenas accumsan tortor convallis felis vestibulum accumsan. Aenean tempus gravida enim et mattis.
+        Ut ornare, nibh quis molestie vehicula, enim lacus condimentum nibh, id porttitor diam sem at quam. Fusce a
+        eleifend erat. Vivamus vulputate risus condimentum augue suscipit, nec fringilla augue tincidunt.</p>
+    <p>Maecenas pretium placerat purus, vel rhoncus neque varius ut. Aenean posuere placerat tempor. Integer lobortis
+        libero vitae rutrum mollis. Fusce feugiat ligula nec velit rhoncus accumsan. Donec ut urna nunc. Donec laoreet
+        ultricies enim suscipit luctus. Ut non lectus vitae sapien venenatis varius. Duis maximus dui at dolor pretium
+        suscipit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque
+        odio nulla, dapibus et iaculis et, auctor ut leo. Nulla facilisi. In et elit gravida, aliquet ligula sit amet,
+        lacinia arcu. Sed ultrices bibendum fermentum.</p>
+    <p>Donec a elit sagittis, rhoncus lectus vel, semper nisi. Duis sagittis tempor purus blandit posuere. Vestibulum
+        vitae volutpat elit. Donec porttitor, mi vel vulputate laoreet, tellus dolor suscipit leo, et pharetra massa dui
+        ut urna. Pellentesque volutpat, libero sed dapibus aliquet, sapien orci consequat velit, nec ullamcorper elit
+        libero id nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet sed nulla nec dictum.
+        Duis ut pellentesque tellus. Duis accumsan metus eu congue venenatis. Integer sodales, tellus in bibendum
+        cursus, ante ex vestibulum dui, at pretium ipsum augue mollis est. Phasellus rutrum, libero laoreet iaculis
+        accumsan, lorem metus efficitur purus, id vestibulum augue nunc non quam. Etiam vehicula dictum arcu. Sed
+        posuere placerat nunc, sit amet iaculis ipsum lacinia sit amet. Aenean ultrices est odio, eu fermentum sapien
+        rhoncus lacinia.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at elit eu urna consectetur rhoncus in non nibh.
+        Morbi pretium ac orci nec euismod. Donec vitae lorem dictum, malesuada risus sit amet, vulputate turpis. Nullam
+        at enim eget turpis placerat interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam in nunc
+        erat. Duis sodales commodo tortor, et volutpat lorem maximus nec.</p>
+    <p>Pellentesque id eros diam. Nunc semper odio odio, et egestas arcu mattis nec. Sed et imperdiet arcu, vitae auctor
+        nisl. Nunc nec libero odio. Donec a nisl mauris. Suspendisse et urna eu eros ultrices pellentesque vel nec elit.
+        Praesent molestie suscipit orci et tristique. Praesent sed ipsum a justo luctus ornare.</p>
+    <p>Vivamus ultrices nibh eu porttitor tincidunt. Sed non libero fermentum, dictum lectus a, semper ante. Aenean eget
+        ipsum nulla. Maecenas accumsan tortor convallis felis vestibulum accumsan. Aenean tempus gravida enim et mattis.
+        Ut ornare, nibh quis molestie vehicula, enim lacus condimentum nibh, id porttitor diam sem at quam. Fusce a
+        eleifend erat. Vivamus vulputate risus condimentum augue suscipit, nec fringilla augue tincidunt.</p>
+    <p>Maecenas pretium placerat purus, vel rhoncus neque varius ut. Aenean posuere placerat tempor. Integer lobortis
+        libero vitae rutrum mollis. Fusce feugiat ligula nec velit rhoncus accumsan. Donec ut urna nunc. Donec laoreet
+        ultricies enim suscipit luctus. Ut non lectus vitae sapien venenatis varius. Duis maximus dui at dolor pretium
+        suscipit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque
+        odio nulla, dapibus et iaculis et, auctor ut leo. Nulla facilisi. In et elit gravida, aliquet ligula sit amet,
+        lacinia arcu. Sed ultrices bibendum fermentum.</p>
+    <p>Donec a elit sagittis, rhoncus lectus vel, semper nisi. Duis sagittis tempor purus blandit posuere. Vestibulum
+        vitae volutpat elit. Donec porttitor, mi vel vulputate laoreet, tellus dolor suscipit leo, et pharetra massa dui
+        ut urna. Pellentesque volutpat, libero sed dapibus aliquet, sapien orci consequat velit, nec ullamcorper elit
+        libero id nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet sed nulla nec dictum.
+        Duis ut pellentesque tellus. Duis accumsan metus eu congue venenatis. Integer sodales, tellus in bibendum
+        cursus, ante ex vestibulum dui, at pretium ipsum augue mollis est. Phasellus rutrum, libero laoreet iaculis
+        accumsan, lorem metus efficitur purus, id vestibulum augue nunc non quam. Etiam vehicula dictum arcu. Sed
+        posuere placerat nunc, sit amet iaculis ipsum lacinia sit amet. Aenean ultrices est odio, eu fermentum sapien
+        rhoncus lacinia.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at elit eu urna consectetur rhoncus in non nibh.
+        Morbi pretium ac orci nec euismod. Donec vitae lorem dictum, malesuada risus sit amet, vulputate turpis. Nullam
+        at enim eget turpis placerat interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam in nunc
+        erat. Duis sodales commodo tortor, et volutpat lorem maximus nec.</p>
+    <p>Pellentesque id eros diam. Nunc semper odio odio, et egestas arcu mattis nec. Sed et imperdiet arcu, vitae auctor
+        nisl. Nunc nec libero odio. Donec a nisl mauris. Suspendisse et urna eu eros ultrices pellentesque vel nec elit.
+        Praesent molestie suscipit orci et tristique. Praesent sed ipsum a justo luctus ornare.</p>
+    <p>Vivamus ultrices nibh eu porttitor tincidunt. Sed non libero fermentum, dictum lectus a, semper ante. Aenean eget
+        ipsum nulla. Maecenas accumsan tortor convallis felis vestibulum accumsan. Aenean tempus gravida enim et mattis.
+        Ut ornare, nibh quis molestie vehicula, enim lacus condimentum nibh, id porttitor diam sem at quam. Fusce a
+        eleifend erat. Vivamus vulputate risus condimentum augue suscipit, nec fringilla augue tincidunt.</p>
+    <p>Maecenas pretium placerat purus, vel rhoncus neque varius ut. Aenean posuere placerat tempor. Integer lobortis
+        libero vitae rutrum mollis. Fusce feugiat ligula nec velit rhoncus accumsan. Donec ut urna nunc. Donec laoreet
+        ultricies enim suscipit luctus. Ut non lectus vitae sapien venenatis varius. Duis maximus dui at dolor pretium
+        suscipit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque
+        odio nulla, dapibus et iaculis et, auctor ut leo. Nulla facilisi. In et elit gravida, aliquet ligula sit amet,
+        lacinia arcu. Sed ultrices bibendum fermentum.</p>
+    <p>Donec a elit sagittis, rhoncus lectus vel, semper nisi. Duis sagittis tempor purus blandit posuere. Vestibulum
+        vitae volutpat elit. Donec porttitor, mi vel vulputate laoreet, tellus dolor suscipit leo, et pharetra massa dui
+        ut urna. Pellentesque volutpat, libero sed dapibus aliquet, sapien orci consequat velit, nec ullamcorper elit
+        libero id nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet sed nulla nec dictum.
+        Duis ut pellentesque tellus. Duis accumsan metus eu congue venenatis. Integer sodales, tellus in bibendum
+        cursus, ante ex vestibulum dui, at pretium ipsum augue mollis est. Phasellus rutrum, libero laoreet iaculis
+        accumsan, lorem metus efficitur purus, id vestibulum augue nunc non quam. Etiam vehicula dictum arcu. Sed
+        posuere placerat nunc, sit amet iaculis ipsum lacinia sit amet. Aenean ultrices est odio, eu fermentum sapien
+        rhoncus lacinia.</p>
+
+
+    <article id="cg-notice" class="cookie-glue-container">
+        <p>This website uses cookies and similar technologies to improve your online experience and to show tailored
+            advertising to you.</p>
+        <button class="cg-manage-opener">Manage</button> <button class="cg-accept">Accept</button>
+        <p>You can view our <a href="#">privacy policy</a> for more information.</p>
+    </article>
+
+    <article id="cg-manage" class="cookie-glue-container">
+        <h2>Cookie Preferences</h2>
+        <ol>
+            <li data-cookie-type="on-mandatory">
+                <input type="checkbox" name="necessary" id="cb-necessary" />
+                <h3><label for="cb-necessary">Necessary Cookies</label></h3>
+                <p>Description.</p>
+            </li>
+            <li data-cookie-type="on-optional">
+                <input type="checkbox" name="performance" id="cb-performance" />
+                <h3><label for="cb-performance">Performance Cookies</label></h3>
+                <p>Description.</p>
+            </li>
+            <li data-cookie-type="on-optional">
+                <input type="checkbox" name="functionality" id="cb-functionality" />
+                <h3><label for="cb-functionality">Functionality Cookies</label></h3>
+                <p>Description.</p>
+            </li>
+            <li data-cookie-type="off-optional">
+                <input type="checkbox" name="targeting" id="cb-targeting" />
+                <h3><label for="cb-targeting">Targeting and Advertising Cookies</label></h3>
+                <p>Description.</p>
+            </li>
+        </ol>
+
+        <button class="cg-store">Save Preferences</button>
+    </article>
+
+    <script>
+        cg.push('necessary', function () {
+            // Necessary Scripts Go Here
+            console.log('Cookie Glue told me necessary is allowed in the footer.');
+        });
+
+        cg.push('functionality', function () {
+            // Functionality Scripts Go Here
+            console.log('Cookie Glue told me functionality is allowed in the footer.');
+        });
+
+        cg.push('performance', function () {
+            // Performance Scripts Go Here
+            console.log('Cookie Glue told me performance is allowed in the footer.');
+        });
+
+        cg.push('targeting', function () {
+            // Targeting Scripts Go Here
+            console.log('Cookie Glue told me targeting is allowed in the footer.');
+        });
+    </script>
+
+    <script async src="/dist/cookieglue.js"></script>
+</body>
+
+</html>
