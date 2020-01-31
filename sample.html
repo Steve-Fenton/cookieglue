@@ -19,6 +19,8 @@
             max-height: calc(100vh - 20px);
             overflow: auto;
         }
+
+        #cg-manage { display: block; }
     </style>
 
     <script>
@@ -144,8 +146,14 @@
         <h2>Cookie Preferences</h2>
         <ol>
             <li data-cookie-type="on-mandatory">
-                <input type="checkbox" name="necessary" id="cb-necessary" />
-                <h3><label for="cb-necessary">Necessary Cookies</label></h3>
+                <!-- See https://codepen.io/basherkev/pen/KZQvoP for styling -->
+                <span class="toggle-button-wrapper">
+                    <button name="necessary" id="cb-necessary" role="switch" aria-checked="true" aria-labelledby="cb-necessary">
+                        <span class="toggle-button-label">on</span>
+                        <span class="toggle-button-switch"></span>
+                    </button>
+                </span>
+                <h3 id="cb-necessary">Necessary Cookies</h3>
                 <p>Description.</p>
             </li>
             <li data-cookie-type="on-optional">
@@ -187,6 +195,13 @@
         cg.push('targeting', function () {
             // Targeting Scripts Go Here
             console.log('Cookie Glue told me targeting is allowed in the footer.');
+        });
+
+        const toggleButton = document.querySelector('[role="switch"]');
+        toggleButton.addEventListener('click', (e) => {
+            let checked = e.target.getAttribute('aria-checked') === 'true';
+            e.target.setAttribute('aria-checked', String(!checked));
+            e.target.firstChild.textContent = checked ? 'on' : 'off';
         });
     </script>
 
