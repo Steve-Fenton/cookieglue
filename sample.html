@@ -19,7 +19,6 @@
             max-height: calc(100vh - 20px);
             overflow: auto;
         }
-        /* #cg-manage { display: block; } */
     </style>
 
     <script>
@@ -218,11 +217,13 @@
             e.preventDefault();
             a11yClick(e);
             if (a11yClick(e)) {
-                let checked = e.target.getAttribute('aria-checked') === 'true';
-                e.target.setAttribute('aria-checked', String(!checked));
-                e.target.firstChild.textContent = checked ? 'on' : 'off';
+                const checked = e.currentTarget.getAttribute('aria-checked') === 'true';
+                let label = e.currentTarget.getElementsByTagName('span')[0];
+                e.currentTarget.setAttribute('aria-checked', !checked);
+                label.textContent = !checked ? 'on' : 'off';
             }
         };
+
 
         const toggleButton = document.querySelector('[role="switch"]');
         toggleButton.addEventListener('click', (e) => handleToggleButton(e), false);
