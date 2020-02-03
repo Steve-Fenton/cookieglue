@@ -19,6 +19,7 @@
             max-height: calc(100vh - 20px);
             overflow: auto;
         }
+        /* #cg-manage { display: block; } */
     </style>
 
     <script>
@@ -195,12 +196,37 @@
             console.log('Cookie Glue told me targeting is allowed in the footer.');
         });
 
+        // a11y helper function to manage click & keyboard events
+        const a11yClick = (e) => {
+            switch (e.type) {
+                case 'click':
+                    return true;
+                    break;
+                case 'keyup':
+                    // ENTER or SPACEBAR
+                    if (e.keyCode === 13 || e.keyCode === 32) {
+                        return true;
+                    }
+                    break;
+                default:
+                    return false;
+                    break;
+            }
+        };
+
+        const handleToggleButton = (e) => {
+            e.preventDefault();
+            a11yClick(e);
+            if (a11yClick(e)) {
+                let checked = e.target.getAttribute('aria-checked') === 'true';
+                e.target.setAttribute('aria-checked', String(!checked));
+                e.target.firstChild.textContent = checked ? 'on' : 'off';
+            }
+        };
+
         const toggleButton = document.querySelector('[role="switch"]');
-        toggleButton.addEventListener('click', (e) => {
-            let checked = e.target.getAttribute('aria-checked') === 'true';
-            e.target.setAttribute('aria-checked', String(!checked));
-            e.target.firstChild.textContent = checked ? 'on' : 'off';
-        });
+        toggleButton.addEventListener('click', (e) => handleToggleButton(e), false);
+        toggleButton.addEventListener('keyup', (e) => handleToggleButton(e), false);
     </script>
 
     <script async src="/dist/cookieglue.js"></script>
