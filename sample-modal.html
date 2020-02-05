@@ -70,7 +70,7 @@
 </head>
 
 <body>
-    <!-- Dummy class to target to make everything inside it "inert" when modal is open. -->
+    <!-- 'page-content' class is needed on site's outermost DIV wrapper, so all focusable elements inside it are rendered "inert" when modal is open. -->
     <div class="page-content">
         <a href="#fallbackpage" class="cg-manage-opener">Manage Cookie
             Preferences</a>
@@ -111,7 +111,7 @@
         </article>
     </div>
 
-    <!-- Ideally, modal needs to be sibling of ALL other page content (i.e. direct child of <body>). -->
+    <!-- Modal needs to be sibling of ALL other page content (i.e. direct child of <body>). -->
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal">
             <div class="modal-inner" role="dialog" aria-modal="true" aria-labelledby="modal-title">
@@ -193,8 +193,7 @@
          *
          * TODO:
          * 1. Close modal if preferences are saved.
-         * 3. 'triggerModalOpen' needs to be dynamic, and passed to modal instance.
-         * 3. Ensure 'page-content' class is added to outermost wrapping DIV on the site, and ensure that 'modal-overlay' DIV is a direct child of BODY.
+         * 2. 'triggerModalOpen' needs to be dynamic, and passed to modal instance.
          */
         const modalOverlay = document.getElementById('modal-overlay');
         const modalInitialFocus = document.getElementById('modal-title');
@@ -219,12 +218,12 @@
         modalOverlay.addEventListener('keydown', (e) => {
             // On the last focusable element, so set focus on first with TAB.
             if (!e.shiftKey && e.keyCode === 9 && e.target === lastFocusable) {
-                console.log(firstFocusable)
+                e.preventDefault();
                 firstFocusable.focus();
             }
             // On the first focusable element, so set focus on last SHFT+TAB.
             if (e.shiftKey && e.keyCode === 9 && e.target === firstFocusable) {
-                console.log(lastFocusable)
+                e.preventDefault();
                 lastFocusable.focus();
             }
         });
