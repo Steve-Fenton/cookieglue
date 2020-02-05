@@ -122,29 +122,43 @@
                     <h2 id="modal-title">Cookie Preferences</h2>
                     <ol>
                         <li data-cookie-type="on-mandatory">
-                            <!-- See https://codepen.io/basherkev/pen/KZQvoP for styling -->
                             <span class="toggle-button-wrapper">
-                                <button name="necessary" id="cb-necessary" role="switch" aria-checked="true" aria-labelledby="cb-necessary">
+                                <button name="necessary" id="cb-necessary" role="switch" aria-checked="true" aria-labelledby="cb-necessary-title">
                                     <span class="toggle-button-label">on</span>
                                     <span class="toggle-button-switch"></span>
                                 </button>
                             </span>
-                            <h3 id="cb-necessary">Necessary Cookies</h3>
+                            <h3 id="cb-necessary-title">Necessary Cookies</h3>
                             <p>Description.</p>
                         </li>
                         <li data-cookie-type="on-optional">
-                            <input type="checkbox" name="performance" id="cb-performance" />
-                            <h3><label for="cb-performance">Performance Cookies</label></h3>
+                            <span class="toggle-button-wrapper">
+                                <button name="performance" id="cb-performance" role="switch" aria-checked="true" aria-labelledby="cb-performance-title">
+                                    <span class="toggle-button-label">on</span>
+                                    <span class="toggle-button-switch"></span>
+                                </button>
+                            </span>
+                            <h3 id="cb-performance-title">Performance Cookies</h3>
                             <p>Description.</p>
                         </li>
                         <li data-cookie-type="on-optional">
-                            <input type="checkbox" name="functionality" id="cb-functionality" />
-                            <h3><label for="cb-functionality">Functionality Cookies</label></h3>
+                            <span class="toggle-button-wrapper">
+                                <button name="functionality" id="cb-functionality" role="switch" aria-checked="true" aria-labelledby="cb-functionality-title">
+                                    <span class="toggle-button-label">on</span>
+                                    <span class="toggle-button-switch"></span>
+                                </button>
+                            </span>
+                            <h3 id="cb-functionality-title">Functionality Cookies</h3>
                             <p>Description.</p>
                         </li>
                         <li data-cookie-type="off-optional">
-                            <input type="checkbox" name="targeting" id="cb-targeting" />
-                            <h3><label for="cb-targeting">Targeting and Advertising Cookies</label></h3>
+                            <span class="toggle-button-wrapper">
+                                <button name="targeting" id="cb-targeting" role="switch" aria-checked="false" aria-labelledby="cb-targeting-title">
+                                    <span class="toggle-button-label">off</span>
+                                    <span class="toggle-button-switch"></span>
+                                </button>
+                            </span>
+                            <h3 id="cb-targeting-title">Targeting Cookies</h3>
                             <p>Description.</p>
                         </li>
                     </ol>
@@ -185,8 +199,10 @@
             label.textContent = !checked ? 'on' : 'off';
         };
 
-        const toggleButton = document.querySelector('[role="switch"]');
-        toggleButton.addEventListener('click', (e) => handleToggleButton(e), false);
+        const toggleButtons = document.querySelectorAll('[role="switch"]');
+        for (toggle of toggleButtons) {
+            toggle.addEventListener('click', (e) => handleToggleButton(e), false);
+        }
 
         /**
          * Modal.
