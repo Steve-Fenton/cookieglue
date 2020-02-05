@@ -3,21 +3,34 @@
 
 <head>
     <style>
-        .cookie-glue-container {
-            box-sizing: border-box;
-            border: 1px solid silver;
-            position: fixed;
-            top: 0;
+        .modal {
+            align-items: center;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             left: 0;
+            pointer-events: none;
+            position: fixed;
+            right: 0;
+            top: 0;
+        }
+        .modal-overlay {
+            background-color: rgba(0,0,0,.7);
+            bottom: 0;
+            left: 0;
+            position: fixed;
+            right: 0;
+            top: 0;
             z-index: 1000;
-            display: none;
-            background-color: #fff;
-            width: calc(100% - 20px);
-            margin: 10px;
-            box-shadow: 5px 5px 10px #666;
-            padding: 10px;
-            max-height: calc(100vh - 20px);
-            overflow: auto;
+        }
+        .modal-inner {
+            background: #fff;
+            max-height: 80%;
+            overflow-y: auto;
+            padding: 20px;
+            pointer-events: all;
+            width: 80%;
         }
     </style>
 
@@ -65,39 +78,49 @@
         <p>You can view our <a href="#">privacy policy</a> for more information.</p>
     </article>
 
-    <article id="cg-manage" class="cookie-glue-container" style="display: block">
-        <h2>Cookie Preferences</h2>
-        <ol>
-            <li data-cookie-type="on-mandatory">
-                <!-- See https://codepen.io/basherkev/pen/KZQvoP for styling -->
-                <span class="toggle-button-wrapper">
-                    <button name="necessary" id="cb-necessary" role="switch" aria-checked="true" aria-labelledby="cb-necessary">
-                        <span class="toggle-button-label">on</span>
-                        <span class="toggle-button-switch"></span>
-                    </button>
-                </span>
-                <h3 id="cb-necessary">Necessary Cookies</h3>
-                <p>Description.</p>
-            </li>
-            <li data-cookie-type="on-optional">
-                <input type="checkbox" name="performance" id="cb-performance" />
-                <h3><label for="cb-performance">Performance Cookies</label></h3>
-                <p>Description.</p>
-            </li>
-            <li data-cookie-type="on-optional">
-                <input type="checkbox" name="functionality" id="cb-functionality" />
-                <h3><label for="cb-functionality">Functionality Cookies</label></h3>
-                <p>Description.</p>
-            </li>
-            <li data-cookie-type="off-optional">
-                <input type="checkbox" name="targeting" id="cb-targeting" />
-                <h3><label for="cb-targeting">Targeting and Advertising Cookies</label></h3>
-                <p>Description.</p>
-            </li>
-        </ol>
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-inner">
+                <button id="js-modal-close">Close</button>
 
-        <button class="cg-store">Save Preferences</button>
-    </article>
+                <!-- TODO - inject modal content dynamically? -->
+                <article id="cg-manage" class="cookie-glue-container" style="display: block">
+                    <h2>Cookie Preferences</h2>
+                    <ol>
+                        <li data-cookie-type="on-mandatory">
+                            <!-- See https://codepen.io/basherkev/pen/KZQvoP for styling -->
+                            <span class="toggle-button-wrapper">
+                                <button name="necessary" id="cb-necessary" role="switch" aria-checked="true" aria-labelledby="cb-necessary">
+                                    <span class="toggle-button-label">on</span>
+                                    <span class="toggle-button-switch"></span>
+                                </button>
+                            </span>
+                            <h3 id="cb-necessary">Necessary Cookies</h3>
+                            <p>Description.</p>
+                        </li>
+                        <!-- <li data-cookie-type="on-optional">
+                            <input type="checkbox" name="performance" id="cb-performance" />
+                            <h3><label for="cb-performance">Performance Cookies</label></h3>
+                            <p>Description.</p>
+                        </li>
+                        <li data-cookie-type="on-optional">
+                            <input type="checkbox" name="functionality" id="cb-functionality" />
+                            <h3><label for="cb-functionality">Functionality Cookies</label></h3>
+                            <p>Description.</p>
+                        </li>
+                        <li data-cookie-type="off-optional">
+                            <input type="checkbox" name="targeting" id="cb-targeting" />
+                            <h3><label for="cb-targeting">Targeting and Advertising Cookies</label></h3>
+                            <p>Description.</p>
+                        </li> -->
+                    </ol>
+
+                    <button class="cg-store">Save Preferences</button>
+                </article>
+
+            </div>
+        </div>
+    </div>
 
     <script>
         cg.push('necessary', function () {
@@ -120,6 +143,7 @@
             console.log('Cookie Glue told me targeting is allowed in the footer.');
         });
 
+        // Toggle button
         const handleToggleButton = (e) => {
             const checked = e.currentTarget.getAttribute('aria-checked') === 'true';
             let label = e.currentTarget.getElementsByTagName('span')[0];
@@ -129,6 +153,21 @@
 
         const toggleButton = document.querySelector('[role="switch"]');
         toggleButton.addEventListener('click', (e) => handleToggleButton(e), false);
+
+        /**
+         * Modal behaviour:
+         * 1. Close modal with close button or ESC.
+         * 2. Focus management.
+         */
+        // 1.
+        const modalOverlay = document.getElementById('modal-overlay');
+        const btnModalClose = document.getElementById('js-modal-close');
+        btnModalClose.addEventListener('click', () => {
+            modalOverlay.style.display = 'none';
+        })
+
+        // 2.
+
     </script>
 
     <script async src="/dist/cookieglue.js"></script>
