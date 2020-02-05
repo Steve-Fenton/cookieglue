@@ -132,7 +132,7 @@
                             <h3 id="cb-necessary">Necessary Cookies</h3>
                             <p>Description.</p>
                         </li>
-                        <!-- <li data-cookie-type="on-optional">
+                        <li data-cookie-type="on-optional">
                             <input type="checkbox" name="performance" id="cb-performance" />
                             <h3><label for="cb-performance">Performance Cookies</label></h3>
                             <p>Description.</p>
@@ -146,7 +146,7 @@
                             <input type="checkbox" name="targeting" id="cb-targeting" />
                             <h3><label for="cb-targeting">Targeting and Advertising Cookies</label></h3>
                             <p>Description.</p>
-                        </li> -->
+                        </li>
                     </ol>
 
                     <button class="cg-store">Save Preferences</button>
@@ -177,7 +177,7 @@
             console.log('Cookie Glue told me targeting is allowed in the footer.');
         });
 
-        // Toggle button
+        // Toggle button.
         const handleToggleButton = (e) => {
             const checked = e.currentTarget.getAttribute('aria-checked') === 'true';
             let label = e.currentTarget.getElementsByTagName('span')[0];
@@ -196,7 +196,6 @@
          * 3. 'triggerModalOpen' needs to be dynamic, and passed to modal instance.
          * 3. Ensure 'page-content' class is added to outermost wrapping DIV on the site, and ensure that 'modal-overlay' DIV is a direct child of BODY.
          */
-
         const modalOverlay = document.getElementById('modal-overlay');
         const modalInitialFocus = document.getElementById('modal-title');
         const body = document.getElementsByTagName('body')[0];
@@ -205,31 +204,39 @@
         const triggerModalOpen = document.getElementsByClassName('cg-manage-opener')[0];
         let focusableElement;
 
-        // DOM manipulation when modal is open.
+        // DOM manipulation when modal is opened.
         modalOverlay.classList.add('modal-open');
         body.classList.add('has-modal');
         pageContent.setAttribute('aria-hidden', 'true');
         modalInitialFocus.setAttribute('tabIndex', '-1');
         modalInitialFocus.focus();
 
-        // Make focusable page content elements INERT when modal is open.
-        const focusableElementsToHide = pageContent.querySelectorAll('a[href]:not([disabled]), button:not([disabled])');
+        // Trap keyboard focus inside modal.
+        const focusable = modalOverlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        const firstFocusable = focusable[0];
+        const lastFocusable = focusable[focusable.length - 1];
 
-        for (focusableElement of focusableElementsToHide) {
-            focusableElement.setAttribute('tabIndex', '-1');
-        }
+        modalOverlay.addEventListener('keydown', (e) => {
+            // On the last focusable element, so set focus on first with TAB.
+            if (!e.shiftKey && e.keyCode === 9 && e.target === lastFocusable) {
+                console.log(firstFocusable)
+                firstFocusable.focus();
+            }
+            // On the first focusable element, so set focus on last SHFT+TAB.
+            if (e.shiftKey && e.keyCode === 9 && e.target === firstFocusable) {
+                console.log(lastFocusable)
+                lastFocusable.focus();
+            }
+        });
 
-        // Close modal with close button or ESC.
+        // Close modal.
         const handleCloseModal = () => {
             modalOverlay.classList.remove('modal-open');
             body.classList.remove('has-modal');
             pageContent.removeAttribute('aria-hidden');
 
-            // Set focus back to triggering element, and reverse INERT state of focusable page content elements.
+            // Set focus back to triggering element.
             triggerModalOpen.focus();
-            for (focusableElement of focusableElementsToHide) {
-                focusableElement.removeAttribute('tabIndex');
-            }
         };
 
         // Bind ESC key and modal close button.
