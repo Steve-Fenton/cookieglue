@@ -164,7 +164,12 @@
         const btnModalClose = document.getElementById('js-modal-close');
         btnModalClose.addEventListener('click', () => {
             modalOverlay.style.display = 'none';
-        })
+        });
+        document.addEventListener('keyup', (e) => {
+            if (e.keyCode === 27) {
+                modalOverlay.style.display = 'none';
+            }
+        });
 
         // 2.
 
