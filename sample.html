@@ -102,9 +102,7 @@
     <!-- 'outerWrapper' is site's outermost DIV wrapper, so all focusable elements inside it are rendered "inert" to screen readers (via 'aria-hidden="true"') when modal is open. -->
     <div id="outerWrapper">
         <a href="#fallbackpage" class="cg-manage-opener">Manage Cookie
-            Preferences</a>
-        <br/><br/>
-        <a id="focus-on-modal-close" href="#" onclick="openModal('modal1', 'focus-on-modal-close', 'modal-title')">Open modal</a>
+            Preferences</a> | <a id="focus-on-modal-close" href="#" onclick="openModal('modal1', 'focus-on-modal-close', 'modal-title')">Open MODAL</a>
 
         <h1>Example Website</h1>
         <a href="/index.html">Home</a> | <a href="/styled.html">Styled</a>
@@ -324,7 +322,8 @@
 
             window.openModal = (modalId, focusOnClose, focusOnOpen) => {
                 const modalOverlay = document.getElementById(modalId);
-                const modalInitialFocus = document.getElementById(focusOnOpen);
+                const modalOnOpenFocus = document.getElementById(focusOnOpen);
+                const modalOnCloseFocus = document.getElementById(focusOnClose);
                 const body = document.getElementsByTagName('body')[0];
                 const pageContent = document.getElementById('outerWrapper');
                 const triggerModalClose = document.getElementById('js-modal-close');
@@ -334,8 +333,8 @@
                 modalOverlay.firstElementChild.classList.remove('hidden');
                 body.classList.add('has-modal');
                 pageContent.setAttribute('aria-hidden', 'true');
-                modalInitialFocus.setAttribute('tabIndex', '-1');
-                modalInitialFocus.focus();
+                modalOnOpenFocus.setAttribute('tabIndex', '-1');
+                modalOnOpenFocus.focus();
 
                 // Trap keyboard focus inside modal.
                 const focusable = modalOverlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
@@ -362,7 +361,7 @@
                     pageContent.removeAttribute('aria-hidden');
 
                     // Set focus to appropriate element.
-                    document.getElementById(focusOnClose).focus();
+                    modalOnCloseFocus.focus();
                     modalOverlay.firstElementChild.classList.add('hidden');
                 };
 
