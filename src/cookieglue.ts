@@ -54,7 +54,7 @@ class CheckboxBinder {
     }
 }
 
-class AriaSliderBinder {
+class ToggleSwitchBinder {
     uiMapToPreference(preferences: ConsentPreferences, input: HTMLButtonElement, cookieType: string) {
         preferences[input.name] = input.getAttribute('aria-checked') === 'true';
     }
@@ -88,7 +88,7 @@ class AriaSliderBinder {
 
 class ConsentBinder {
     private checkboxBinder = new CheckboxBinder();
-    private ariaSliderBinder = new AriaSliderBinder();
+    private ariaSliderBinder = new ToggleSwitchBinder();
 
     public UIMapToPreferences(container: HTMLElement): ConsentPreferences {
         const items = container.querySelectorAll('[data-cookie-type]');

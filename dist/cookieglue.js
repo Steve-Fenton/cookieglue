@@ -61,13 +61,13 @@ var CheckboxBinder = /** @class */ (function () {
     };
     return CheckboxBinder;
 }());
-var AriaSliderBinder = /** @class */ (function () {
-    function AriaSliderBinder() {
+var ToggleSwitchBinder = /** @class */ (function () {
+    function ToggleSwitchBinder() {
     }
-    AriaSliderBinder.prototype.uiMapToPreference = function (preferences, input, cookieType) {
+    ToggleSwitchBinder.prototype.uiMapToPreference = function (preferences, input, cookieType) {
         preferences[input.name] = input.getAttribute('aria-checked') === 'true';
     };
-    AriaSliderBinder.prototype.uiMapFromPreference = function (input, cookieType, cg) {
+    ToggleSwitchBinder.prototype.uiMapFromPreference = function (input, cookieType, cg) {
         switch (cookieType) {
             case 'on-mandatory':
                 input.setAttribute('aria-checked', 'true');
@@ -94,12 +94,12 @@ var AriaSliderBinder = /** @class */ (function () {
                 break;
         }
     };
-    return AriaSliderBinder;
+    return ToggleSwitchBinder;
 }());
 var ConsentBinder = /** @class */ (function () {
     function ConsentBinder() {
         this.checkboxBinder = new CheckboxBinder();
-        this.ariaSliderBinder = new AriaSliderBinder();
+        this.ariaSliderBinder = new ToggleSwitchBinder();
     }
     ConsentBinder.prototype.UIMapToPreferences = function (container) {
         var items = container.querySelectorAll('[data-cookie-type]');
