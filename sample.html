@@ -96,8 +96,8 @@
 </head>
 
 <body>
-    <!-- 'page-content' class is needed on site's outermost DIV wrapper, so all focusable elements inside it are rendered "inert" when modal is open. -->
-    <div class="page-content">
+    <!-- 'outerWrapper' is site's outermost DIV wrapper, so all focusable elements inside it are rendered "inert" to screen readers (via 'aria-hidden="true"') when modal is open. -->
+    <div id="outerWrapper">
         <a href="#fallbackpage" class="cg-manage-opener">Manage Cookie
             Preferences</a>
 
@@ -182,7 +182,6 @@
         accumsan, lorem metus efficitur purus, id vestibulum augue nunc non quam. Etiam vehicula dictum arcu. Sed
         posuere placerat nunc, sit amet iaculis ipsum lacinia sit amet. Aenean ultrices est odio, eu fermentum sapien
         rhoncus lacinia.</p>
-
 
         <article id="cg-notice" class="cookie-glue-container">
             <p>This website uses cookies and similar technologies to improve your online experience and to show tailored
@@ -302,14 +301,17 @@
         /**
          * Modal.
          *
+         * Implementation based on:
+         * https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal
+         *
          * TODO:
          * 1. Close modal if preferences are saved.
-         * 2. 'triggerModalOpen' needs to be dynamic, and passed to modal instance.
+         * 2. 'triggerModalOpen' needs to be dynamic, and passed to modal instance so focus can be set back to it when modal is closed.
          */
         const modalOverlay = document.getElementById('modal-overlay');
         const modalInitialFocus = document.getElementById('modal-title');
         const body = document.getElementsByTagName('body')[0];
-        const pageContent = document.getElementsByClassName('page-content')[0];
+        const pageContent = document.getElementById('outerWrapper');
         const triggerModalClose = document.getElementById('js-modal-close');
         const triggerModalOpen = document.getElementsByClassName('cg-manage-opener')[0];
         let focusableElement;
