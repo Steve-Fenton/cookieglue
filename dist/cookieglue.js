@@ -32,27 +32,139 @@ var CookieGlueDistributor = /** @class */ (function () {
     };
     return CookieGlueDistributor;
 }());
+var CheckboxBinder = /** @class */ (function () {
+    function CheckboxBinder() {
+    }
+    CheckboxBinder.prototype.uiMapToPreference = function (preferences, input, cookieType) {
+        preferences[input.name] = input.checked;
+    };
+    CheckboxBinder.prototype.uiMapFromPreference = function (input, cookieType, cg) {
+        switch (cookieType) {
+            case 'on-mandatory':
+                input.setAttribute('checked', 'checked');
+                input.setAttribute('disabled', 'disabled');
+                break;
+            case 'on-optional':
+                if (cg.can(input.name, true)) {
+                    input.setAttribute('checked', 'checked');
+                }
+                break;
+            case 'off-optional':
+                if (cg.can(input.name, false)) {
+                    input.setAttribute('checked', 'checked');
+                }
+                break;
+            default:
+                console.log('cookie-glue unknown data-cookie-type', cookieType);
+                break;
+        }
+    };
+    return CheckboxBinder;
+}());
+var AriaSliderBinder = /** @class */ (function () {
+    function AriaSliderBinder() {
+    }
+    AriaSliderBinder.prototype.uiMapToPreference = function (preferences, input, cookieType) {
+        preferences[input.name] = input.getAttribute('aria-checked') === 'true';
+    };
+    AriaSliderBinder.prototype.uiMapFromPreference = function (input, cookieType, cg) {
+        switch (cookieType) {
+            case 'on-mandatory':
+                input.setAttribute('aria-checked', 'true');
+                input.setAttribute('disabled', 'disabled');
+                break;
+            case 'on-optional':
+                if (cg.can(input.name, true)) {
+                    input.setAttribute('aria-checked', 'true');
+                }
+                else {
+                    input.setAttribute('aria-checked', 'false');
+                }
+                break;
+            case 'off-optional':
+                if (cg.can(input.name, false)) {
+                    input.setAttribute('aria-checked', 'true');
+                }
+                else {
+                    input.setAttribute('aria-checked', 'false');
+                }
+                break;
+            default:
+                console.log('cookie-glue unknown data-cookie-type', cookieType);
+                break;
+        }
+    };
+    return AriaSliderBinder;
+}());
+var ConsentBinder = /** @class */ (function () {
+    function ConsentBinder() {
+        this.checkboxBinder = new CheckboxBinder();
+        this.ariaSliderBinder = new AriaSliderBinder();
+    }
+    ConsentBinder.prototype.UIMapToPreferences = function (container) {
+        var items = container.querySelectorAll('[data-cookie-type]');
+        var preferences = {};
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var cookieType = item.getAttribute('data-cookie-type');
+            var input = item.querySelector('input[type=checkbox]');
+            if (this.isInputElement(input)) {
+                this.checkboxBinder.uiMapToPreference(preferences, input, cookieType);
+                continue;
+            }
+            var button = item.querySelector('button[aria-checked]');
+            if (this.isButtonElement(button)) {
+                this.ariaSliderBinder.uiMapToPreference(preferences, button, cookieType);
+                continue;
+            }
+        }
+        return preferences;
+    };
+    ConsentBinder.prototype.UIMapFromPreferences = function (container, cg) {
+        var items = container.querySelectorAll('[data-cookie-type]');
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var cookieType = item.getAttribute('data-cookie-type');
+            var input = item.querySelector('input[type=checkbox]');
+            if (this.isInputElement(input)) {
+                this.checkboxBinder.uiMapFromPreference(input, cookieType, cg);
+                continue;
+            }
+            var button = item.querySelector('button[aria-checked]');
+            if (this.isButtonElement(button)) {
+                this.ariaSliderBinder.uiMapFromPreference(button, cookieType, cg);
+                continue;
+            }
+        }
+    };
+    ConsentBinder.prototype.isInputElement = function (element) {
+        return (!!element && element.tagName.toUpperCase() === 'INPUT');
+    };
+    ConsentBinder.prototype.isButtonElement = function (element) {
+        return (!!element && element.tagName.toUpperCase() === 'BUTTON');
+    };
+    return ConsentBinder;
+}());
 var CookieGlueApp = /** @class */ (function () {
     function CookieGlueApp(name) {
-        var _this_1 = this;
+        var _this = this;
         if (name === void 0) { name = 'cg'; }
         this.name = name;
         this.storage = new CookieGlueStorage();
         this.checkAndRun();
         this.addEvent(window, 'load', function () {
-            _this_1.bindButtons();
-            CookieGlueDistributor.pageLoaded(_this_1);
+            _this.bindButtons();
+            CookieGlueDistributor.pageLoaded(_this);
         });
     }
     CookieGlueApp.prototype.bindButtons = function () {
-        var _this_1 = this;
         var _this = this;
         var bindClick = function (elem, handler) {
             var newElement = elem.cloneNode(true);
             elem.parentNode.replaceChild(newElement, elem);
-            _this_1.addEvent(newElement, 'click', function (event) {
+            _this.addEvent(newElement, 'click', function (event) {
                 event.preventDefault();
-                handler(_this_1);
+                handler(_this);
                 return false;
             });
         };
@@ -82,7 +194,7 @@ var CookieGlueApp = /** @class */ (function () {
         return result;
     };
     CookieGlueApp.prototype.checkAndRun = function () {
-        var _this_1 = this;
+        var _this = this;
         if (!window[this.name] || !window[this.name].data) {
             console.log('Nothing found registered in a global variable with this name', this.name);
             return;
@@ -90,7 +202,7 @@ var CookieGlueApp = /** @class */ (function () {
         // This converts the register into an immediate execution as cookie glue is now loaded
         var data = window[this.name].data;
         window[this.name] = {
-            push: function (t, f, d) { if (_this_1.can(t, d))
+            push: function (t, f, d) { if (_this.can(t, d))
                 f(); }
         };
         for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
@@ -115,15 +227,15 @@ var CookieGlueApp = /** @class */ (function () {
         this.noticeContainer().style.display = 'none';
     };
     CookieGlueApp.prototype.showNotice = function () {
-        var _this_1 = this;
-        this.manageContainer().style.display = 'none';
+        var _this = this;
+        this.hideContainers();
         var container = this.noticeContainer();
         var source = container.getAttribute('data-cookie-source');
         if (source) {
             var ajax = new Ajax();
             ajax.send(source, function (response) {
                 container.innerHTML = response.responseText;
-                _this_1.bindButtons();
+                _this.bindButtons();
                 container.style.display = 'block';
             }, function () { return console.error('cookie-glue - cannot load notice text'); });
         }
@@ -132,16 +244,16 @@ var CookieGlueApp = /** @class */ (function () {
         }
     };
     CookieGlueApp.prototype.showManager = function (callback) {
-        var _this_1 = this;
-        this.noticeContainer().style.display = 'none';
+        var _this = this;
+        this.hideContainers();
         var container = this.manageContainer();
         var source = container.getAttribute('data-cookie-source');
         if (source) {
             var ajax = new Ajax();
             ajax.send(source, function (response) {
                 container.innerHTML = response.responseText;
-                _this_1.bindButtons();
-                _this_1.bindPreferencesToUI();
+                _this.bindButtons();
+                _this.bindPreferencesToUI();
                 callback(container);
             }, function () { return console.error('cookie-glue - cannot load notice text'); });
         }
@@ -163,23 +275,8 @@ var CookieGlueApp = /** @class */ (function () {
         this.store();
     };
     CookieGlueApp.prototype.store = function () {
-        var container = this.manageContainer();
-        var items = container.querySelectorAll('[data-cookie-type]');
-        var preferences = {};
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i];
-            var cookieType = item.getAttribute('data-cookie-type');
-            var input = item.querySelector('input[type=checkbox]');
-            if (!this.isInputElement(input)) {
-                continue;
-            }
-            if (!!input) {
-                preferences[input.name] = input.checked;
-            }
-            else {
-                console.log('cookie-glue - no input found in element of kind', cookieType);
-            }
-        }
+        var binder = new ConsentBinder();
+        var preferences = binder.UIMapToPreferences(this.manageContainer());
         this.storage.store(JSON.stringify(preferences));
     };
     CookieGlueApp.prototype.reload = function () {
@@ -190,40 +287,8 @@ var CookieGlueApp = /** @class */ (function () {
         location.reload();
     };
     CookieGlueApp.prototype.bindPreferencesToUI = function () {
-        var manageContainer = this.manageContainer();
-        var items = manageContainer.querySelectorAll('[data-cookie-type]');
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i];
-            var cookieType = item.getAttribute('data-cookie-type');
-            var input = item.querySelector('input[type=checkbox]');
-            if (!this.isInputElement(input)) {
-                continue;
-            }
-            if (!!input) {
-                switch (cookieType) {
-                    case 'on-mandatory':
-                        input.setAttribute('checked', 'checked');
-                        input.setAttribute('disabled', 'disabled');
-                        break;
-                    case 'on-optional':
-                        if (this.can(input.name, true)) {
-                            input.setAttribute('checked', 'checked');
-                        }
-                        break;
-                    case 'off-optional':
-                        if (this.can(input.name, false)) {
-                            input.setAttribute('checked', 'checked');
-                        }
-                        break;
-                    default:
-                        console.log('cookie-glue unknown data-cookie-type', cookieType);
-                        break;
-                }
-            }
-            else {
-                console.log('cookie-glue no input found in element of kind', cookieType);
-            }
-        }
+        var binder = new ConsentBinder();
+        binder.UIMapFromPreferences(this.manageContainer(), this);
     };
     CookieGlueApp.prototype.addEvent = function (element, event, callback) {
         if (element.addEventListener) {
@@ -247,9 +312,6 @@ var CookieGlueApp = /** @class */ (function () {
     };
     CookieGlueApp.prototype.storeButtons = function () {
         return this.getClickTargets('cg-store');
-    };
-    CookieGlueApp.prototype.isInputElement = function (element) {
-        return (element.tagName.toUpperCase() === 'INPUT');
     };
     CookieGlueApp.prototype.getContainer = function (id) {
         var container = document.getElementById(id);
@@ -321,7 +383,7 @@ var Ajax = /** @class */ (function () {
     function Ajax() {
     }
     Ajax.prototype.send = function (url, successCallback, failureCallback) {
-        var _this_1 = this;
+        var _this = this;
         var isComplete = false;
         var request = this.getRequestObject();
         request.open('GET', url, true);
@@ -330,7 +392,7 @@ var Ajax = /** @class */ (function () {
         request.onreadystatechange = function () {
             if (request.readyState == 4 && !isComplete) {
                 isComplete = true;
-                if (_this_1.isResponseSuccess(request.status)) {
+                if (_this.isResponseSuccess(request.status)) {
                     successCallback.call(request, request);
                 }
                 else {

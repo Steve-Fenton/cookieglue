@@ -22,6 +22,131 @@ class CookieGlueDistributor {
     }
 }
 
+interface ConsentPreferences {
+    [key: string]: boolean;
+}
+
+class CheckboxBinder {
+    uiMapToPreference(preferences: ConsentPreferences, input: HTMLInputElement, cookieType: string) {
+        preferences[input.name] = input.checked;
+    }
+
+    uiMapFromPreference(input: HTMLInputElement, cookieType: string, cg: CookieGlueApp) {
+        switch (cookieType) {
+            case 'on-mandatory':
+                input.setAttribute('checked', 'checked');
+                input.setAttribute('disabled', 'disabled');
+                break;
+            case 'on-optional':
+                if (cg.can(input.name, true)) {
+                    input.setAttribute('checked', 'checked');
+                }
+                break;
+            case 'off-optional':
+                if (cg.can(input.name, false)) {
+                    input.setAttribute('checked', 'checked');
+                }
+                break;
+            default:
+                console.log('cookie-glue unknown data-cookie-type', cookieType);
+                break;
+        }
+    }
+}
+
+class AriaSliderBinder {
+    uiMapToPreference(preferences: ConsentPreferences, input: HTMLButtonElement, cookieType: string) {
+        preferences[input.name] = input.getAttribute('aria-checked') === 'true';
+    }
+
+    uiMapFromPreference(input: HTMLButtonElement, cookieType: string, cg: CookieGlueApp) {
+        switch (cookieType) {
+            case 'on-mandatory':
+                input.setAttribute('aria-checked', 'true');
+                input.setAttribute('disabled', 'disabled');
+                break;
+            case 'on-optional':
+                if (cg.can(input.name, true)) {
+                    input.setAttribute('aria-checked', 'true');
+                } else {
+                    input.setAttribute('aria-checked', 'false');
+                }
+                break;
+            case 'off-optional':
+                if (cg.can(input.name, false)) {
+                    input.setAttribute('aria-checked', 'true');
+                } else {
+                    input.setAttribute('aria-checked', 'false');
+                }
+                break;
+            default:
+                console.log('cookie-glue unknown data-cookie-type', cookieType);
+                break;
+        }
+    }
+}
+
+class ConsentBinder {
+    private checkboxBinder = new CheckboxBinder();
+    private ariaSliderBinder = new AriaSliderBinder();
+
+    public UIMapToPreferences(container: HTMLElement): ConsentPreferences {
+        const items = container.querySelectorAll('[data-cookie-type]');
+        const preferences: ConsentPreferences = {};
+
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            const cookieType = item.getAttribute('data-cookie-type');
+
+            const input = item.querySelector('input[type=checkbox]');
+
+            if (this.isInputElement(input)) {
+                this.checkboxBinder.uiMapToPreference(preferences, input, cookieType);
+                continue;
+            }
+
+            const button = item.querySelector('button[aria-checked]');
+
+            if (this.isButtonElement(button)) {
+                this.ariaSliderBinder.uiMapToPreference(preferences, button, cookieType);
+                continue;
+            }
+        }
+
+        return preferences;
+    }
+
+    public UIMapFromPreferences(container: HTMLElement, cg: CookieGlueApp) {
+        const items = container.querySelectorAll('[data-cookie-type]');
+
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            const cookieType = item.getAttribute('data-cookie-type');
+            const input = item.querySelector('input[type=checkbox]');
+
+            if (this.isInputElement(input)) {
+                this.checkboxBinder.uiMapFromPreference(input, cookieType, cg);
+                continue;
+            }
+
+            const button = item.querySelector('button[aria-checked]');
+
+            if (this.isButtonElement(button)) {
+                this.ariaSliderBinder.uiMapFromPreference(button, cookieType, cg);
+                continue;
+            }
+        }
+    }
+
+    private isInputElement(element: Element): element is HTMLInputElement {
+        return (!!element && element.tagName.toUpperCase() === 'INPUT');
+    }
+
+    private isButtonElement(element: Element): element is HTMLButtonElement {
+        return (!!element && element.tagName.toUpperCase() === 'BUTTON');
+    }
+}
+
 class CookieGlueApp {
     private storage = new CookieGlueStorage();
 
@@ -34,7 +159,6 @@ class CookieGlueApp {
     }
 
     private bindButtons() {
-        const _this = this;
         const bindClick = (elem: Element, handler: Function) => {
             var newElement = elem.cloneNode(true);
             elem.parentNode.replaceChild(newElement, elem);
@@ -108,7 +232,7 @@ class CookieGlueApp {
     }
 
     public showNotice() {
-        this.manageContainer().style.display = 'none';
+        this.hideContainers();
 
         const container = this.noticeContainer();
         const source = container.getAttribute('data-cookie-source');
@@ -126,7 +250,7 @@ class CookieGlueApp {
     }
 
     public showManager(callback: (container: HTMLElement) => void) {
-        this.noticeContainer().style.display = 'none';
+        this.hideContainers();
 
         const container = this.manageContainer();
         const source = container.getAttribute('data-cookie-source');
@@ -161,27 +285,8 @@ class CookieGlueApp {
     }
 
     store() {
-        const container = this.manageContainer()
-        const items = container.querySelectorAll('[data-cookie-type]');
-        const preferences = {};
-
-        for (let i = 0; i < items.length; i++) {
-            const item = items[i];
-            const cookieType = item.getAttribute('data-cookie-type');
-
-            const input = item.querySelector('input[type=checkbox]');
-
-            if (!this.isInputElement(input)) {
-                continue;
-            }
-
-            if (!!input) {
-                preferences[input.name] = input.checked;
-            } else {
-                console.log('cookie-glue - no input found in element of kind', cookieType);
-            }
-        }
-
+        const binder = new ConsentBinder();
+        const preferences = binder.UIMapToPreferences(this.manageContainer());
         this.storage.store(JSON.stringify(preferences));
     }
 
@@ -192,46 +297,11 @@ class CookieGlueApp {
 
         /* Reload the Page to Trigger Consented Scripts */
         location.reload();
-
     }
 
     protected bindPreferencesToUI() {
-        const manageContainer = this.manageContainer();
-        const items = manageContainer.querySelectorAll('[data-cookie-type]');
-
-        for (let i = 0; i < items.length; i++) {
-            const item = items[i];
-            const cookieType = item.getAttribute('data-cookie-type');
-            const input = item.querySelector('input[type=checkbox]');
-
-            if (!this.isInputElement(input)) {
-                continue;
-            }
-
-            if (!!input) {
-                switch (cookieType) {
-                    case 'on-mandatory':
-                        input.setAttribute('checked', 'checked');
-                        input.setAttribute('disabled', 'disabled');
-                        break;
-                    case 'on-optional':
-                        if (this.can(input.name, true)) {
-                            input.setAttribute('checked', 'checked');
-                        }
-                        break;
-                    case 'off-optional':
-                        if (this.can(input.name, false)) {
-                            input.setAttribute('checked', 'checked');
-                        }
-                        break;
-                    default:
-                        console.log('cookie-glue unknown data-cookie-type', cookieType);
-                        break;
-                }
-            } else {
-                console.log('cookie-glue no input found in element of kind', cookieType);
-            }
-        }
+        const binder = new ConsentBinder();
+        binder.UIMapFromPreferences(this.manageContainer(), this);
     }
 
     protected addEvent(element: HTMLElement | Element | Node | Window, event: string, callback: EventListenerOrEventListenerObject) {
@@ -260,10 +330,6 @@ class CookieGlueApp {
 
     protected storeButtons() {
         return this.getClickTargets('cg-store');
-    }
-
-    private isInputElement(element: Element): element is HTMLInputElement {
-        return (element.tagName.toUpperCase() === 'INPUT');
     }
 
     private getContainer(id: string) {
