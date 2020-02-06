@@ -3,21 +3,85 @@
 
 <head>
     <style>
-        .cookie-glue-container {
-            box-sizing: border-box;
-            border: 1px solid silver;
-            position: fixed;
-            top: 0;
+        :focus {
+            outline: 2px solid; /* TEMP so we can see focus */
+        }
+        .modal {
+            align-items: center;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             left: 0;
-            z-index: 1000;
+            pointer-events: none;
+            position: fixed;
+            right: 0;
+            top: 0;
+        }
+        .modal-overlay {
+            background-color: rgba(0,0,0,.5);
+            bottom: 0;
             display: none;
-            background-color: #fff;
-            width: calc(100% - 20px);
-            margin: 10px;
-            box-shadow: 5px 5px 10px #666;
-            padding: 10px;
-            max-height: calc(100vh - 20px);
-            overflow: auto;
+            left: 0;
+            position: fixed;
+            right: 0;
+            top: 0;
+            z-index: 1000;
+        }
+        .modal-inner {
+            background: #fff;
+            max-height: 80%;
+            overflow-y: auto;
+            padding: 20px;
+            pointer-events: all;
+            width: 80%;
+        }
+        .modal-open.modal-overlay {
+            display: block;
+        }
+        .has-modal {
+            overflow: hidden;
+        }
+        .toggle-button-wrapper * {
+            /* display: inline-block;
+            vertical-align: middle; */
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+        }
+        [role='switch'] {
+            /* background-color: #000; */
+            border: 1px solid;
+            border-radius: 20px;
+            /* color: #fff; */
+            cursor: pointer;
+            /* display: inline-block; */
+            height: 35px;
+            margin: 0 5px;
+            overflow: visible;
+            padding: 5px;
+            position: relative;
+            width: 70px;
+        }
+        .toggle-button-switch {
+            background: #333;
+            border-color: #333;
+            color: #000;
+            border: 1px solid;
+            border-radius: 50%;
+            display: inline-block;
+            height: 25px;
+            right: 5px;
+            line-height: 25px;
+            position: absolute;
+            top: 5px;
+            width: 25px;
+        }
+        [role='switch'][aria-checked='true'] .toggle-button-switch {
+            /* left: 5px; */
+        }
+        [role='switch'][aria-checked='false'] {
+            flex-direction: row-reverse;
         }
     </style>
 
@@ -47,11 +111,13 @@
 </head>
 
 <body>
-    <a href="#fallbackpage" class="cg-manage-opener">Manage Cookie
-        Preferences</a>
+    <!-- 'page-content' class is needed on site's outermost DIV wrapper, so all focusable elements inside it are rendered "inert" when modal is open. -->
+    <div class="page-content">
+        <a href="#fallbackpage" class="cg-manage-opener">Manage Cookie
+            Preferences</a>
 
-    <h1>Example Website</h1>
-    <a href="/index.html">Home</a> | <a href="/styled.html">Styled</a>
+        <h1>Example Website</h1>
+        <a href="/index.html">Home</a> | <a href="/styled.html">Styled</a>
 
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at elit eu urna consectetur rhoncus in non nibh.
         Morbi pretium ac orci nec euismod. Donec vitae lorem dictum, malesuada risus sit amet, vulputate turpis. Nullam
@@ -133,46 +199,72 @@
         rhoncus lacinia.</p>
 
 
-    <article id="cg-notice" class="cookie-glue-container">
-        <p>This website uses cookies and similar technologies to improve your online experience and to show tailored
-            advertising to you.</p>
-        <button class="cg-manage-opener">Manage</button> <button class="cg-accept">Accept</button>
-        <p>You can view our <a href="#">privacy policy</a> for more information.</p>
-    </article>
+        <article id="cg-notice" class="cookie-glue-container">
+            <p>This website uses cookies and similar technologies to improve your online experience and to show tailored
+                advertising to you.</p>
+            <button class="cg-manage-opener">Manage</button> <button class="cg-accept">Accept</button>
+            <p>You can view our <a href="#">privacy policy</a> for more information.</p>
+        </article>
+    </div>
 
-    <article id="cg-manage" class="cookie-glue-container">
-        <h2>Cookie Preferences</h2>
-        <ol>
-            <li data-cookie-type="on-mandatory">
-                <!-- See https://codepen.io/basherkev/pen/KZQvoP for styling -->
-                <span class="toggle-button-wrapper">
-                    <button name="necessary" id="cb-necessary" role="switch" aria-checked="true" aria-labelledby="cb-necessary">
-                        <span class="toggle-button-label">on</span>
-                        <span class="toggle-button-switch"></span>
-                    </button>
-                </span>
-                <h3 id="cb-necessary">Necessary Cookies</h3>
-                <p>Description.</p>
-            </li>
-            <li data-cookie-type="on-optional">
-                <input type="checkbox" name="performance" id="cb-performance" />
-                <h3><label for="cb-performance">Performance Cookies</label></h3>
-                <p>Description.</p>
-            </li>
-            <li data-cookie-type="on-optional">
-                <input type="checkbox" name="functionality" id="cb-functionality" />
-                <h3><label for="cb-functionality">Functionality Cookies</label></h3>
-                <p>Description.</p>
-            </li>
-            <li data-cookie-type="off-optional">
-                <input type="checkbox" name="targeting" id="cb-targeting" />
-                <h3><label for="cb-targeting">Targeting and Advertising Cookies</label></h3>
-                <p>Description.</p>
-            </li>
-        </ol>
+    <!-- Modal needs to be sibling of ALL other page content (i.e. direct child of <body>). -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-inner" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+                <button id="js-modal-close">Close</button>
 
-        <button class="cg-store">Save Preferences</button>
-    </article>
+                <!-- TODO - inject modal content dynamically? -->
+                <article id="cg-manage" class="cookie-glue-container" style="display: block">
+                    <h2 id="modal-title">Cookie Preferences</h2>
+                    <ol>
+                        <li data-cookie-type="on-mandatory">
+                            <span class="toggle-button-wrapper">
+                                <button name="necessary" id="cb-necessary" role='switch' aria-checked="true" aria-labelledby="cb-necessary-title">
+                                    <span class="toggle-button-label">on</span>
+                                    <span class="toggle-button-switch"></span>
+                                </button>
+                            </span>
+                            <h3 id="cb-necessary-title">Necessary Cookies</h3>
+                            <p>Description.</p>
+                        </li>
+                        <li data-cookie-type="on-optional">
+                            <span class="toggle-button-wrapper">
+                                <button name="performance" id="cb-performance" role='switch' aria-checked="true" aria-labelledby="cb-performance-title">
+                                    <span class="toggle-button-label">on</span>
+                                    <span class="toggle-button-switch"></span>
+                                </button>
+                            </span>
+                            <h3 id="cb-performance-title">Performance Cookies</h3>
+                            <p>Description.</p>
+                        </li>
+                        <li data-cookie-type="on-optional">
+                            <span class="toggle-button-wrapper">
+                                <button name="functionality" id="cb-functionality" role='switch' aria-checked="true" aria-labelledby="cb-functionality-title">
+                                    <span class="toggle-button-label">on</span>
+                                    <span class="toggle-button-switch"></span>
+                                </button>
+                            </span>
+                            <h3 id="cb-functionality-title">Functionality Cookies</h3>
+                            <p>Description.</p>
+                        </li>
+                        <li data-cookie-type="off-optional">
+                            <span class="toggle-button-wrapper">
+                                <button name="targeting" id="cb-targeting" role='switch' aria-checked="false" aria-labelledby="cb-targeting-title">
+                                    <span class="toggle-button-label">off</span>
+                                    <span class="toggle-button-switch"></span>
+                                </button>
+                            </span>
+                            <h3 id="cb-targeting-title">Targeting Cookies</h3>
+                            <p>Description.</p>
+                        </li>
+                    </ol>
+
+                    <button class="cg-store">Save Preferences</button>
+                </article>
+
+            </div>
+        </div>
+    </div>
 
     <script>
         cg.push('necessary', function () {
@@ -195,39 +287,77 @@
             console.log('Cookie Glue told me targeting is allowed in the footer.');
         });
 
-        // a11y helper function to manage click & keyboard events
-        const a11yClick = (e) => {
-            switch (e.type) {
-                case 'click':
-                    return true;
-                    break;
-                case 'keyup':
-                    // ENTER or SPACEBAR
-                    if (e.keyCode === 13 || e.keyCode === 32) {
-                        return true;
-                    }
-                    break;
-                default:
-                    return false;
-                    break;
-            }
-        };
-
+        // Toggle button.
         const handleToggleButton = (e) => {
-            e.preventDefault();
-            a11yClick(e);
-            if (a11yClick(e)) {
-                const checked = e.currentTarget.getAttribute('aria-checked') === 'true';
-                let label = e.currentTarget.getElementsByTagName('span')[0];
-                e.currentTarget.setAttribute('aria-checked', !checked);
-                label.textContent = !checked ? 'on' : 'off';
-            }
+            const checked = e.currentTarget.getAttribute('aria-checked') === 'true';
+            let label = e.currentTarget.getElementsByTagName('span')[0];
+            e.currentTarget.setAttribute('aria-checked', !checked);
+            label.textContent = !checked ? 'on' : 'off';
         };
 
+        const toggleButtons = document.querySelectorAll('[role="switch"]');
+        for (toggle of toggleButtons) {
+            toggle.addEventListener('click', (e) => handleToggleButton(e), false);
+        }
 
-        const toggleButton = document.querySelector('[role="switch"]');
-        toggleButton.addEventListener('click', (e) => handleToggleButton(e), false);
-        toggleButton.addEventListener('keyup', (e) => handleToggleButton(e), false);
+        /**
+         * Modal.
+         *
+         * TODO:
+         * 1. Close modal if preferences are saved.
+         * 2. 'triggerModalOpen' needs to be dynamic, and passed to modal instance.
+         */
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalInitialFocus = document.getElementById('modal-title');
+        const body = document.getElementsByTagName('body')[0];
+        const pageContent = document.getElementsByClassName('page-content')[0];
+        const triggerModalClose = document.getElementById('js-modal-close');
+        const triggerModalOpen = document.getElementsByClassName('cg-manage-opener')[0];
+        let focusableElement;
+
+        // DOM manipulation when modal is opened.
+        modalOverlay.classList.add('modal-open');
+        body.classList.add('has-modal');
+        pageContent.setAttribute('aria-hidden', 'true');
+        modalInitialFocus.setAttribute('tabIndex', '-1');
+        modalInitialFocus.focus();
+
+        // Trap keyboard focus inside modal.
+        const focusable = modalOverlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        const firstFocusable = focusable[0];
+        const lastFocusable = focusable[focusable.length - 1];
+
+        modalOverlay.addEventListener('keydown', (e) => {
+            // On the last focusable element, so set focus on first with TAB.
+            if (!e.shiftKey && e.keyCode === 9 && e.target === lastFocusable) {
+                e.preventDefault();
+                firstFocusable.focus();
+            }
+            // On the first focusable element, so set focus on last SHFT+TAB.
+            if (e.shiftKey && e.keyCode === 9 && e.target === firstFocusable) {
+                e.preventDefault();
+                lastFocusable.focus();
+            }
+        });
+
+        // Close modal.
+        const handleCloseModal = () => {
+            modalOverlay.classList.remove('modal-open');
+            body.classList.remove('has-modal');
+            pageContent.removeAttribute('aria-hidden');
+
+            // Set focus back to triggering element.
+            triggerModalOpen.focus();
+        };
+
+        // Bind ESC key and modal close button.
+        triggerModalClose.addEventListener('click', () => handleCloseModal(), false);
+        document.addEventListener('keyup', (e) => {
+            if (e.keyCode === 27) {
+                handleCloseModal();
+            }
+        }, false);
+
     </script>
 
     <script async src="/dist/cookieglue.js"></script>

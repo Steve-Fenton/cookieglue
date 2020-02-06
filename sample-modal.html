@@ -4,7 +4,7 @@
 <head>
     <style>
         :focus {
-            outline: 2px solid;
+            outline: 2px solid; /* TEMP so we can see focus */
         }
         .modal {
             align-items: center;
@@ -41,6 +41,47 @@
         }
         .has-modal {
             overflow: hidden;
+        }
+        .toggle-button-wrapper * {
+            /* display: inline-block;
+            vertical-align: middle; */
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+        }
+        [role='switch'] {
+            /* background-color: #000; */
+            border: 1px solid;
+            border-radius: 20px;
+            /* color: #fff; */
+            cursor: pointer;
+            /* display: inline-block; */
+            height: 35px;
+            margin: 0 5px;
+            overflow: visible;
+            padding: 5px;
+            position: relative;
+            width: 70px;
+        }
+        .toggle-button-switch {
+            background: #333;
+            border-color: #333;
+            color: #000;
+            border: 1px solid;
+            border-radius: 50%;
+            display: inline-block;
+            height: 25px;
+            right: 5px;
+            line-height: 25px;
+            position: absolute;
+            top: 5px;
+            width: 25px;
+        }
+        [role='switch'][aria-checked='true'] .toggle-button-switch {
+            /* left: 5px; */
+        }
+        [role='switch'][aria-checked='false'] {
+            flex-direction: row-reverse;
         }
     </style>
 
@@ -123,7 +164,7 @@
                     <ol>
                         <li data-cookie-type="on-mandatory">
                             <span class="toggle-button-wrapper">
-                                <button name="necessary" id="cb-necessary" role="switch" aria-checked="true" aria-labelledby="cb-necessary-title">
+                                <button name="necessary" id="cb-necessary" role='switch' aria-checked="true" aria-labelledby="cb-necessary-title">
                                     <span class="toggle-button-label">on</span>
                                     <span class="toggle-button-switch"></span>
                                 </button>
@@ -133,7 +174,7 @@
                         </li>
                         <li data-cookie-type="on-optional">
                             <span class="toggle-button-wrapper">
-                                <button name="performance" id="cb-performance" role="switch" aria-checked="true" aria-labelledby="cb-performance-title">
+                                <button name="performance" id="cb-performance" role='switch' aria-checked="true" aria-labelledby="cb-performance-title">
                                     <span class="toggle-button-label">on</span>
                                     <span class="toggle-button-switch"></span>
                                 </button>
@@ -143,7 +184,7 @@
                         </li>
                         <li data-cookie-type="on-optional">
                             <span class="toggle-button-wrapper">
-                                <button name="functionality" id="cb-functionality" role="switch" aria-checked="true" aria-labelledby="cb-functionality-title">
+                                <button name="functionality" id="cb-functionality" role='switch' aria-checked="true" aria-labelledby="cb-functionality-title">
                                     <span class="toggle-button-label">on</span>
                                     <span class="toggle-button-switch"></span>
                                 </button>
@@ -153,7 +194,7 @@
                         </li>
                         <li data-cookie-type="off-optional">
                             <span class="toggle-button-wrapper">
-                                <button name="targeting" id="cb-targeting" role="switch" aria-checked="false" aria-labelledby="cb-targeting-title">
+                                <button name="targeting" id="cb-targeting" role='switch' aria-checked="false" aria-labelledby="cb-targeting-title">
                                     <span class="toggle-button-label">off</span>
                                     <span class="toggle-button-switch"></span>
                                 </button>
