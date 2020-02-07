@@ -102,7 +102,8 @@
     <!-- 'outerWrapper' is site's outermost DIV wrapper, so all focusable elements inside it are rendered "inert" to screen readers (via 'aria-hidden="true"') when modal is open. -->
     <div id="outerWrapper">
         <a href="#fallbackpage" class="cg-manage-opener">Manage Cookie
-            Preferences</a> | <a id="focus-on-modal-close" href="#" onclick="openModal('modal1', 'modal-title', 'focus-on-modal-close', closeModal)">Open MODAL</a>
+            Preferences</a> | <a id="focus-on-modal-close" href="#" onclick="openModal('modal1', 'modal-title', 'focus-on-modal-close')">Open MODAL</a>
+            <!-- <a id="focus-on-modal-close" href="#" onclick="openModal('modal1', 'modal-title', 'focus-on-modal-close', closeModal)">Open MODAL</a> -->
 
         <h1>Example Website</h1>
         <a href="/index.html">Home</a> | <a href="/styled.html">Styled</a>
@@ -202,7 +203,7 @@
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="modal-title">
-                <button id="js-modal-close">Close</button>
+                <button id="js-modal-close" onclick="closeModal(this)">Close</button>
 
                 <!-- TODO - inject modal content dynamically? -->
                 <article id="cg-manage" class="cookie-glue-container" style="display: block">
@@ -327,7 +328,7 @@
              * 1. Refactor into ES6 class?
              * 2. Add error handling / types?
              */
-            const Modal = (modalId, focusOnOpen, focusOnClose, handleOnClose) => {
+            function Modal(modalId, focusOnOpen, focusOnClose, handleOnClose) {
                 this.modalOverlay = document.getElementById(modalId);
                 this.modalOnOpenFocus = document.getElementById(focusOnOpen);
                 this.modalOnCloseFocus = document.getElementById(focusOnClose);
@@ -343,27 +344,39 @@
                 this.modalOnOpenFocus.setAttribute('tabIndex', '-1');
                 this.modalOnOpenFocus.focus();
 
-                // Trap keyboard focus inside modal.
-                this.focusable = modalOverlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-                this.firstFocusable = this.focusable[0];
-                this.lastFocusable = this.focusable[focusable.length - 1];
-
-                this.modalOverlay.addEventListener('keydown', (e) => {
-                    // On the last focusable element, so set focus on first with TAB.
-                    if (!e.shiftKey && e.keyCode === 9 && e.target === this.lastFocusable) {
-                        e.preventDefault();
-                        this.firstFocusable.focus();
-                    }
-                    // On the first focusable element, so set focus on last SHFT+TAB.
-                    if (e.shiftKey && e.keyCode === 9 && e.target === this.firstFocusable) {
-                        e.preventDefault();
-                        this.lastFocusable.focus();
-                    }
-                });
+                // Add event listener to trap focus in modal.
+                this.modalOverlay.addEventListener('keydown', (e) => this.trapFocus(e));
             }
 
-            window.openModal = function (modalId, focusOnOpen, focusOnClose, handleOnClose) {
-                var modal = new Modal(modalId, focusOnOpen, focusOnClose, handleOnClose);
+            Modal.prototype.trapFocus = function (e) {
+                this.focusable = this.modalOverlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                this.firstFocusable = this.focusable[0];
+                this.lastFocusable = this.focusable[this.focusable.length - 1];
+
+                // If on the last focusable element, set focus on first element with TAB.
+                if (!e.shiftKey && e.keyCode === 9 && e.target === this.lastFocusable) {
+                    e.preventDefault();
+                    this.firstFocusable.focus();
+                }
+                // If on the first focusable element, set focus on last element with SHIFT+TAB.
+                if (e.shiftKey && e.keyCode === 9 && e.target === this.firstFocusable) {
+                    e.preventDefault();
+                    this.lastFocusable.focus();
+                }
+            };
+
+            Modal.prototype.close = function () {
+                this.modalOverlay.removeEventListener('keydown', this.trapFocus);
+            };
+
+            // Instantiate modal object.
+            let modal;
+            window.openModal = (modalId, focusOnOpen, focusOnClose, handleOnClose) => {
+                modal = new Modal(modalId, focusOnOpen, focusOnClose, handleOnClose);
+            };
+
+            window.closeModal = (closeButton) => {
+                modal.close();
             };
 
         }());
