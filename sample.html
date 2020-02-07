@@ -102,8 +102,7 @@
     <!-- 'outerWrapper' is site's outermost DIV wrapper, so all focusable elements inside it are rendered "inert" to screen readers (via 'aria-hidden="true"') when modal is open. -->
     <div id="outerWrapper">
         <a href="#fallbackpage" class="cg-manage-opener">Manage Cookie
-            Preferences</a> | <a id="focus-on-modal-close" href="#" onclick="openModal('modal1', 'modal-title', 'focus-on-modal-close')">Open MODAL</a>
-            <!-- <a id="focus-on-modal-close" href="#" onclick="openModal('modal1', 'modal-title', 'focus-on-modal-close', closeModal)">Open MODAL</a> -->
+            Preferences</a> | <a id="focus-on-modal-close" href="#" onclick="openModal('modal1', 'modal-title', 'focus-on-modal-close', closeModal)">Open MODAL</a>
 
         <h1>Example Website</h1>
         <a href="/index.html">Home</a> | <a href="/styled.html">Styled</a>
@@ -346,6 +345,16 @@
 
                 // Add event listener to trap focus in modal.
                 this.modalOverlay.addEventListener('keydown', (e) => this.trapFocus(e));
+
+                // Bind ESC key to close button.
+                document.addEventListener('keyup', (e) => {
+                    if (e.keyCode === 27) {
+                        this.close();
+                    }
+                });
+
+                // Close modal callback - is this needed???
+                console.log('callback', this.handleOnClose);
             }
 
             Modal.prototype.trapFocus = function (e) {
@@ -366,16 +375,23 @@
             };
 
             Modal.prototype.close = function () {
+                this.modalOverlay.classList.remove('modal-open');
+                this.body.classList.remove('has-modal');
+                this.pageContent.removeAttribute('aria-hidden');
+                this.modalOverlay.firstElementChild.classList.add('hidden');
                 this.modalOverlay.removeEventListener('keydown', this.trapFocus);
+
+                // Set focus to appropriate element.
+                this.modalOnCloseFocus.focus();
             };
 
-            // Instantiate modal object.
+            // Instantiate Modal.
             let modal;
             window.openModal = (modalId, focusOnOpen, focusOnClose, handleOnClose) => {
                 modal = new Modal(modalId, focusOnOpen, focusOnClose, handleOnClose);
             };
 
-            window.closeModal = (closeButton) => {
+            window.closeModal = () => {
                 modal.close();
             };
 
