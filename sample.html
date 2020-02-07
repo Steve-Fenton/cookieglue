@@ -264,7 +264,7 @@
                         </li>
                     </ol>
 
-                    <button class="cg-store">Save Preferences</button>
+                    <button class="cg-store" onclick="closeModal()">Save Preferences</button>
                 </article>
 
             </div>
@@ -305,82 +305,65 @@
             toggle.addEventListener('click', (e) => handleToggleButton(e), false);
         }
 
-        /**
-         * Modal.
-         *
-         * Simplified implementation based on:
-         * https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal
-         *
-         * @param modalId
-         *      The ID of the DOM node serving as the modal container.
-         * @param focusOnOpen
-         *      The ID of the DOM node to focus when the modal opens.
-         * @param focusOnClose
-         *      The ID of the DOM node to focus when the modal closes.
-         * @param handleOnClose
-         *      Callback for handling modal close.
-         */
-
-        /* TODO: refactor into reusable class & add error handling */
         (function () {
-
-            window.openModal = (modalId, focusOnOpen, focusOnClose, handleOnClose) => {
-                const modalOverlay = document.getElementById(modalId);
-                const modalOnOpenFocus = document.getElementById(focusOnOpen);
-                const modalOnCloseFocus = document.getElementById(focusOnClose);
-                const body = document.getElementsByTagName('body')[0];
-                const pageContent = document.getElementById('outerWrapper');
-                const triggerModalClose = document.getElementById('js-modal-close');
+            /**
+             * Modal.
+             *
+             * Simplified implementation based on:
+             * https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal
+             *
+             * @constructor
+             *
+             * @param modalId
+             *      The ID of the DOM node serving as the modal container.
+             * @param focusOnOpen
+             *      The ID of the DOM node to focus when the modal opens.
+             * @param focusOnClose
+             *      The ID of the DOM node to focus when the modal closes.
+             * @param handleOnClose
+             *      Callback for handling modal close.
+             *
+             * TODO:
+             * 1. Refactor into ES6 class?
+             * 2. Add error handling / types?
+             */
+            const Modal = (modalId, focusOnOpen, focusOnClose, handleOnClose) => {
+                this.modalOverlay = document.getElementById(modalId);
+                this.modalOnOpenFocus = document.getElementById(focusOnOpen);
+                this.modalOnCloseFocus = document.getElementById(focusOnClose);
+                this.body = document.getElementsByTagName('body')[0];
+                this.pageContent = document.getElementById('outerWrapper');
+                this.triggerModalClose = document.getElementById('js-modal-close');
 
                 // DOM manipulation when modal is opened.
-                modalOverlay.classList.add('modal-open');
-                modalOverlay.firstElementChild.classList.remove('hidden');
-                body.classList.add('has-modal');
-                pageContent.setAttribute('aria-hidden', 'true');
-                modalOnOpenFocus.setAttribute('tabIndex', '-1');
-                modalOnOpenFocus.focus();
+                this.modalOverlay.classList.add('modal-open');
+                this.modalOverlay.firstElementChild.classList.remove('hidden');
+                this.body.classList.add('has-modal');
+                this.pageContent.setAttribute('aria-hidden', 'true');
+                this.modalOnOpenFocus.setAttribute('tabIndex', '-1');
+                this.modalOnOpenFocus.focus();
 
                 // Trap keyboard focus inside modal.
-                const focusable = modalOverlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-                const firstFocusable = focusable[0];
-                const lastFocusable = focusable[focusable.length - 1];
+                this.focusable = modalOverlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                this.firstFocusable = this.focusable[0];
+                this.lastFocusable = this.focusable[focusable.length - 1];
 
-                modalOverlay.addEventListener('keydown', (e) => {
+                this.modalOverlay.addEventListener('keydown', (e) => {
                     // On the last focusable element, so set focus on first with TAB.
-                    if (!e.shiftKey && e.keyCode === 9 && e.target === lastFocusable) {
+                    if (!e.shiftKey && e.keyCode === 9 && e.target === this.lastFocusable) {
                         e.preventDefault();
-                        firstFocusable.focus();
+                        this.firstFocusable.focus();
                     }
                     // On the first focusable element, so set focus on last SHFT+TAB.
-                    if (e.shiftKey && e.keyCode === 9 && e.target === firstFocusable) {
+                    if (e.shiftKey && e.keyCode === 9 && e.target === this.firstFocusable) {
                         e.preventDefault();
-                        lastFocusable.focus();
+                        this.lastFocusable.focus();
                     }
                 });
+            }
 
-                // Close modal.
-                handleOnClose(triggerModalClose, modalOnCloseFocus, modalOverlay, body, pageContent);
-            };
-
-            // Close modal.
-            window.closeModal = (triggerModalClose, modalOnCloseFocus, modalOverlay, body, pageContent) => {
-                const handleCloseModal = () => {
-                    modalOverlay.classList.remove('modal-open');
-                    body.classList.remove('has-modal');
-                    pageContent.removeAttribute('aria-hidden');
-
-                    // Set focus to appropriate element.
-                    modalOnCloseFocus.focus();
-                    modalOverlay.firstElementChild.classList.add('hidden');
-                };
-
-                // Bind ESC key and modal close button.
-                triggerModalClose.addEventListener('click', () => handleCloseModal(), false);
-                document.addEventListener('keyup', (e) => {
-                    if (e.keyCode === 27) {
-                        handleCloseModal();
-                    }
-                }, false);
+            window.openModal = function (modalId, focusOnOpen, focusOnClose, handleOnClose) {
+                var modal = new Modal(modalId, focusOnOpen, focusOnClose, handleOnClose);
             };
 
         }());
