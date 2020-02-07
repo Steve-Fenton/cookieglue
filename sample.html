@@ -102,7 +102,7 @@
     <!-- 'outerWrapper' is site's outermost DIV wrapper, so all focusable elements inside it are rendered "inert" to screen readers (via 'aria-hidden="true"') when modal is open. -->
     <div id="outerWrapper">
         <a href="#fallbackpage" class="cg-manage-opener">Manage Cookie
-            Preferences</a> | <a id="focus-on-modal-close" href="#" onclick="openModal('modal1', 'focus-on-modal-close', 'modal-title')">Open MODAL</a>
+            Preferences</a> | <a id="focus-on-modal-close" href="#" onclick="openModal('modal1', 'modal-title', 'focus-on-modal-close', closeModal)">Open MODAL</a>
 
         <h1>Example Website</h1>
         <a href="/index.html">Home</a> | <a href="/styled.html">Styled</a>
@@ -313,14 +313,18 @@
          *
          * @param modalId
          *      The ID of the DOM node serving as the modal container.
-         * @param focusOnClose
-         *      The ID of the DOM node to focus when the modal closes.
          * @param focusOnOpen
          *      The ID of the DOM node to focus when the modal opens.
+         * @param focusOnClose
+         *      The ID of the DOM node to focus when the modal closes.
+         * @param handleOnClose
+         *      Callback for handling modal close.
          */
+
+        /* TODO: refactor into reusable class & add error handling */
         (function () {
 
-            window.openModal = (modalId, focusOnClose, focusOnOpen) => {
+            window.openModal = (modalId, focusOnOpen, focusOnClose, handleOnClose) => {
                 const modalOverlay = document.getElementById(modalId);
                 const modalOnOpenFocus = document.getElementById(focusOnOpen);
                 const modalOnCloseFocus = document.getElementById(focusOnClose);
@@ -355,6 +359,11 @@
                 });
 
                 // Close modal.
+                handleOnClose(triggerModalClose, modalOnCloseFocus, modalOverlay, body, pageContent);
+            };
+
+            // Close modal.
+            window.closeModal = (triggerModalClose, modalOnCloseFocus, modalOverlay, body, pageContent) => {
                 const handleCloseModal = () => {
                     modalOverlay.classList.remove('modal-open');
                     body.classList.remove('has-modal');
