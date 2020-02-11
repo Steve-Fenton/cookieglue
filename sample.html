@@ -4,11 +4,14 @@
 <head>
     <style>
         :focus {
-            outline: 2px solid cadetblue; /* TEMP so we can see focus */
+            outline: 2px solid cadetblue;
+            /* TEMP so we can see focus */
         }
+
         .hidden {
             display: none !important;
         }
+
         .modal {
             align-items: center;
             bottom: 0;
@@ -21,8 +24,9 @@
             right: 0;
             top: 0;
         }
+
         .modal-overlay {
-            background-color: rgba(0,0,0,.5);
+            background-color: rgba(0, 0, 0, .5);
             bottom: 0;
             display: none;
             left: 0;
@@ -31,6 +35,7 @@
             top: 0;
             z-index: 1000;
         }
+
         .modal-inner {
             background: #fff;
             max-height: 80%;
@@ -39,12 +44,15 @@
             pointer-events: all;
             width: 80%;
         }
+
         .modal-open.modal-overlay {
             display: block;
         }
+
         .has-modal {
             overflow: hidden;
         }
+
         [role='switch'] {
             border: 1px solid;
             border-radius: 15px;
@@ -55,11 +63,13 @@
             padding: 4px 5px;
             width: 50px;
         }
+
         .toggle-button-wrapper {
             align-items: center;
             display: flex;
             justify-content: space-between;
         }
+
         .toggle-button-switch {
             background: #333;
             color: #000;
@@ -68,7 +78,8 @@
             height: 15px;
             width: 15px;
         }
-        [role='switch'][aria-checked='true'] .toggle-button-wrapper {
+
+        [role='switch'][aria-checked='false'] .toggle-button-wrapper {
             flex-direction: row-reverse;
         }
     </style>
@@ -101,121 +112,174 @@
 <body>
     <!-- 'outerWrapper' is site's outermost DIV wrapper, so all focusable elements inside it are rendered "inert" to screen readers (via 'aria-hidden="true"') when modal is open. -->
     <div id="outerWrapper">
-        <a href="#fallbackpage" class="cg-manage-opener">Manage Cookie
-            Preferences</a> | <a id="focus-on-modal-close" href="#" onclick="openModal('modal1', 'modal-title', 'focus-on-modal-close', closeModal)">Open MODAL</a>
+        <a href="#fallbackpage" class="cg-manage-opener">Manage Cookie Preferences</a>
 
         <h1>Example Website</h1>
         <a href="/index.html">Home</a> | <a href="/styled.html">Styled</a>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at elit eu urna consectetur rhoncus in non nibh.
-        Morbi pretium ac orci nec euismod. Donec vitae lorem dictum, malesuada risus sit amet, vulputate turpis. Nullam
-        at enim eget turpis placerat interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam in nunc
-        erat. Duis sodales commodo tortor, et volutpat lorem maximus nec.</p>
-    <p>Pellentesque id eros diam. Nunc semper odio odio, et egestas arcu mattis nec. Sed et imperdiet arcu, vitae auctor
-        nisl. Nunc nec libero odio. Donec a nisl mauris. Suspendisse et urna eu eros ultrices pellentesque vel nec elit.
-        Praesent molestie suscipit orci et tristique. Praesent sed ipsum a justo luctus ornare.</p>
-    <p>Vivamus ultrices nibh eu porttitor tincidunt. Sed non libero fermentum, dictum lectus a, semper ante. Aenean eget
-        ipsum nulla. Maecenas accumsan tortor convallis felis vestibulum accumsan. Aenean tempus gravida enim et mattis.
-        Ut ornare, nibh quis molestie vehicula, enim lacus condimentum nibh, id porttitor diam sem at quam. Fusce a
-        eleifend erat. Vivamus vulputate risus condimentum augue suscipit, nec fringilla augue tincidunt.</p>
-    <p>Maecenas pretium placerat purus, vel rhoncus neque varius ut. Aenean posuere placerat tempor. Integer lobortis
-        libero vitae rutrum mollis. Fusce feugiat ligula nec velit rhoncus accumsan. Donec ut urna nunc. Donec laoreet
-        ultricies enim suscipit luctus. Ut non lectus vitae sapien venenatis varius. Duis maximus dui at dolor pretium
-        suscipit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque
-        odio nulla, dapibus et iaculis et, auctor ut leo. Nulla facilisi. In et elit gravida, aliquet ligula sit amet,
-        lacinia arcu. Sed ultrices bibendum fermentum.</p>
-    <p>Donec a elit sagittis, rhoncus lectus vel, semper nisi. Duis sagittis tempor purus blandit posuere. Vestibulum
-        vitae volutpat elit. Donec porttitor, mi vel vulputate laoreet, tellus dolor suscipit leo, et pharetra massa dui
-        ut urna. Pellentesque volutpat, libero sed dapibus aliquet, sapien orci consequat velit, nec ullamcorper elit
-        libero id nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet sed nulla nec dictum.
-        Duis ut pellentesque tellus. Duis accumsan metus eu congue venenatis. Integer sodales, tellus in bibendum
-        cursus, ante ex vestibulum dui, at pretium ipsum augue mollis est. Phasellus rutrum, libero laoreet iaculis
-        accumsan, lorem metus efficitur purus, id vestibulum augue nunc non quam. Etiam vehicula dictum arcu. Sed
-        posuere placerat nunc, sit amet iaculis ipsum lacinia sit amet. Aenean ultrices est odio, eu fermentum sapien
-        rhoncus lacinia.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at elit eu urna consectetur rhoncus in non nibh.
-        Morbi pretium ac orci nec euismod. Donec vitae lorem dictum, malesuada risus sit amet, vulputate turpis. Nullam
-        at enim eget turpis placerat interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam in nunc
-        erat. Duis sodales commodo tortor, et volutpat lorem maximus nec.</p>
-    <p>Pellentesque id eros diam. Nunc semper odio odio, et egestas arcu mattis nec. Sed et imperdiet arcu, vitae auctor
-        nisl. Nunc nec libero odio. Donec a nisl mauris. Suspendisse et urna eu eros ultrices pellentesque vel nec elit.
-        Praesent molestie suscipit orci et tristique. Praesent sed ipsum a justo luctus ornare.</p>
-    <p>Vivamus ultrices nibh eu porttitor tincidunt. Sed non libero fermentum, dictum lectus a, semper ante. Aenean eget
-        ipsum nulla. Maecenas accumsan tortor convallis felis vestibulum accumsan. Aenean tempus gravida enim et mattis.
-        Ut ornare, nibh quis molestie vehicula, enim lacus condimentum nibh, id porttitor diam sem at quam. Fusce a
-        eleifend erat. Vivamus vulputate risus condimentum augue suscipit, nec fringilla augue tincidunt.</p>
-    <p>Maecenas pretium placerat purus, vel rhoncus neque varius ut. Aenean posuere placerat tempor. Integer lobortis
-        libero vitae rutrum mollis. Fusce feugiat ligula nec velit rhoncus accumsan. Donec ut urna nunc. Donec laoreet
-        ultricies enim suscipit luctus. Ut non lectus vitae sapien venenatis varius. Duis maximus dui at dolor pretium
-        suscipit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque
-        odio nulla, dapibus et iaculis et, auctor ut leo. Nulla facilisi. In et elit gravida, aliquet ligula sit amet,
-        lacinia arcu. Sed ultrices bibendum fermentum.</p>
-    <p>Donec a elit sagittis, rhoncus lectus vel, semper nisi. Duis sagittis tempor purus blandit posuere. Vestibulum
-        vitae volutpat elit. Donec porttitor, mi vel vulputate laoreet, tellus dolor suscipit leo, et pharetra massa dui
-        ut urna. Pellentesque volutpat, libero sed dapibus aliquet, sapien orci consequat velit, nec ullamcorper elit
-        libero id nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet sed nulla nec dictum.
-        Duis ut pellentesque tellus. Duis accumsan metus eu congue venenatis. Integer sodales, tellus in bibendum
-        cursus, ante ex vestibulum dui, at pretium ipsum augue mollis est. Phasellus rutrum, libero laoreet iaculis
-        accumsan, lorem metus efficitur purus, id vestibulum augue nunc non quam. Etiam vehicula dictum arcu. Sed
-        posuere placerat nunc, sit amet iaculis ipsum lacinia sit amet. Aenean ultrices est odio, eu fermentum sapien
-        rhoncus lacinia.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at elit eu urna consectetur rhoncus in non nibh.
-        Morbi pretium ac orci nec euismod. Donec vitae lorem dictum, malesuada risus sit amet, vulputate turpis. Nullam
-        at enim eget turpis placerat interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam in nunc
-        erat. Duis sodales commodo tortor, et volutpat lorem maximus nec.</p>
-    <p>Pellentesque id eros diam. Nunc semper odio odio, et egestas arcu mattis nec. Sed et imperdiet arcu, vitae auctor
-        nisl. Nunc nec libero odio. Donec a nisl mauris. Suspendisse et urna eu eros ultrices pellentesque vel nec elit.
-        Praesent molestie suscipit orci et tristique. Praesent sed ipsum a justo luctus ornare.</p>
-    <p>Vivamus ultrices nibh eu porttitor tincidunt. Sed non libero fermentum, dictum lectus a, semper ante. Aenean eget
-        ipsum nulla. Maecenas accumsan tortor convallis felis vestibulum accumsan. Aenean tempus gravida enim et mattis.
-        Ut ornare, nibh quis molestie vehicula, enim lacus condimentum nibh, id porttitor diam sem at quam. Fusce a
-        eleifend erat. Vivamus vulputate risus condimentum augue suscipit, nec fringilla augue tincidunt.</p>
-    <p>Maecenas pretium placerat purus, vel rhoncus neque varius ut. Aenean posuere placerat tempor. Integer lobortis
-        libero vitae rutrum mollis. Fusce feugiat ligula nec velit rhoncus accumsan. Donec ut urna nunc. Donec laoreet
-        ultricies enim suscipit luctus. Ut non lectus vitae sapien venenatis varius. Duis maximus dui at dolor pretium
-        suscipit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque
-        odio nulla, dapibus et iaculis et, auctor ut leo. Nulla facilisi. In et elit gravida, aliquet ligula sit amet,
-        lacinia arcu. Sed ultrices bibendum fermentum.</p>
-    <p>Donec a elit sagittis, rhoncus lectus vel, semper nisi. Duis sagittis tempor purus blandit posuere. Vestibulum
-        vitae volutpat elit. Donec porttitor, mi vel vulputate laoreet, tellus dolor suscipit leo, et pharetra massa dui
-        ut urna. Pellentesque volutpat, libero sed dapibus aliquet, sapien orci consequat velit, nec ullamcorper elit
-        libero id nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet sed nulla nec dictum.
-        Duis ut pellentesque tellus. Duis accumsan metus eu congue venenatis. Integer sodales, tellus in bibendum
-        cursus, ante ex vestibulum dui, at pretium ipsum augue mollis est. Phasellus rutrum, libero laoreet iaculis
-        accumsan, lorem metus efficitur purus, id vestibulum augue nunc non quam. Etiam vehicula dictum arcu. Sed
-        posuere placerat nunc, sit amet iaculis ipsum lacinia sit amet. Aenean ultrices est odio, eu fermentum sapien
-        rhoncus lacinia.</p>
-
-        <article id="cg-notice" class="cookie-glue-container">
-            <p>This website uses cookies and similar technologies to improve your online experience and to show tailored
-                advertising to you.</p>
-            <button class="cg-manage-opener">Manage</button> <button class="cg-accept">Accept</button>
-            <p>You can view our <a href="#">privacy policy</a> for more information.</p>
-        </article>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at elit eu urna consectetur rhoncus in non
+            nibh.
+            Morbi pretium ac orci nec euismod. Donec vitae lorem dictum, malesuada risus sit amet, vulputate turpis.
+            Nullam
+            at enim eget turpis placerat interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam in
+            nunc
+            erat. Duis sodales commodo tortor, et volutpat lorem maximus nec.</p>
+        <p>Pellentesque id eros diam. Nunc semper odio odio, et egestas arcu mattis nec. Sed et imperdiet arcu, vitae
+            auctor
+            nisl. Nunc nec libero odio. Donec a nisl mauris. Suspendisse et urna eu eros ultrices pellentesque vel nec
+            elit.
+            Praesent molestie suscipit orci et tristique. Praesent sed ipsum a justo luctus ornare.</p>
+        <p>Vivamus ultrices nibh eu porttitor tincidunt. Sed non libero fermentum, dictum lectus a, semper ante. Aenean
+            eget
+            ipsum nulla. Maecenas accumsan tortor convallis felis vestibulum accumsan. Aenean tempus gravida enim et
+            mattis.
+            Ut ornare, nibh quis molestie vehicula, enim lacus condimentum nibh, id porttitor diam sem at quam. Fusce a
+            eleifend erat. Vivamus vulputate risus condimentum augue suscipit, nec fringilla augue tincidunt.</p>
+        <p>Maecenas pretium placerat purus, vel rhoncus neque varius ut. Aenean posuere placerat tempor. Integer
+            lobortis
+            libero vitae rutrum mollis. Fusce feugiat ligula nec velit rhoncus accumsan. Donec ut urna nunc. Donec
+            laoreet
+            ultricies enim suscipit luctus. Ut non lectus vitae sapien venenatis varius. Duis maximus dui at dolor
+            pretium
+            suscipit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+            Quisque
+            odio nulla, dapibus et iaculis et, auctor ut leo. Nulla facilisi. In et elit gravida, aliquet ligula sit
+            amet,
+            lacinia arcu. Sed ultrices bibendum fermentum.</p>
+        <p>Donec a elit sagittis, rhoncus lectus vel, semper nisi. Duis sagittis tempor purus blandit posuere.
+            Vestibulum
+            vitae volutpat elit. Donec porttitor, mi vel vulputate laoreet, tellus dolor suscipit leo, et pharetra massa
+            dui
+            ut urna. Pellentesque volutpat, libero sed dapibus aliquet, sapien orci consequat velit, nec ullamcorper
+            elit
+            libero id nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet sed nulla nec
+            dictum.
+            Duis ut pellentesque tellus. Duis accumsan metus eu congue venenatis. Integer sodales, tellus in bibendum
+            cursus, ante ex vestibulum dui, at pretium ipsum augue mollis est. Phasellus rutrum, libero laoreet iaculis
+            accumsan, lorem metus efficitur purus, id vestibulum augue nunc non quam. Etiam vehicula dictum arcu. Sed
+            posuere placerat nunc, sit amet iaculis ipsum lacinia sit amet. Aenean ultrices est odio, eu fermentum
+            sapien
+            rhoncus lacinia.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at elit eu urna consectetur rhoncus in non
+            nibh.
+            Morbi pretium ac orci nec euismod. Donec vitae lorem dictum, malesuada risus sit amet, vulputate turpis.
+            Nullam
+            at enim eget turpis placerat interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam in
+            nunc
+            erat. Duis sodales commodo tortor, et volutpat lorem maximus nec.</p>
+        <p>Pellentesque id eros diam. Nunc semper odio odio, et egestas arcu mattis nec. Sed et imperdiet arcu, vitae
+            auctor
+            nisl. Nunc nec libero odio. Donec a nisl mauris. Suspendisse et urna eu eros ultrices pellentesque vel nec
+            elit.
+            Praesent molestie suscipit orci et tristique. Praesent sed ipsum a justo luctus ornare.</p>
+        <p>Vivamus ultrices nibh eu porttitor tincidunt. Sed non libero fermentum, dictum lectus a, semper ante. Aenean
+            eget
+            ipsum nulla. Maecenas accumsan tortor convallis felis vestibulum accumsan. Aenean tempus gravida enim et
+            mattis.
+            Ut ornare, nibh quis molestie vehicula, enim lacus condimentum nibh, id porttitor diam sem at quam. Fusce a
+            eleifend erat. Vivamus vulputate risus condimentum augue suscipit, nec fringilla augue tincidunt.</p>
+        <p>Maecenas pretium placerat purus, vel rhoncus neque varius ut. Aenean posuere placerat tempor. Integer
+            lobortis
+            libero vitae rutrum mollis. Fusce feugiat ligula nec velit rhoncus accumsan. Donec ut urna nunc. Donec
+            laoreet
+            ultricies enim suscipit luctus. Ut non lectus vitae sapien venenatis varius. Duis maximus dui at dolor
+            pretium
+            suscipit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+            Quisque
+            odio nulla, dapibus et iaculis et, auctor ut leo. Nulla facilisi. In et elit gravida, aliquet ligula sit
+            amet,
+            lacinia arcu. Sed ultrices bibendum fermentum.</p>
+        <p>Donec a elit sagittis, rhoncus lectus vel, semper nisi. Duis sagittis tempor purus blandit posuere.
+            Vestibulum
+            vitae volutpat elit. Donec porttitor, mi vel vulputate laoreet, tellus dolor suscipit leo, et pharetra massa
+            dui
+            ut urna. Pellentesque volutpat, libero sed dapibus aliquet, sapien orci consequat velit, nec ullamcorper
+            elit
+            libero id nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet sed nulla nec
+            dictum.
+            Duis ut pellentesque tellus. Duis accumsan metus eu congue venenatis. Integer sodales, tellus in bibendum
+            cursus, ante ex vestibulum dui, at pretium ipsum augue mollis est. Phasellus rutrum, libero laoreet iaculis
+            accumsan, lorem metus efficitur purus, id vestibulum augue nunc non quam. Etiam vehicula dictum arcu. Sed
+            posuere placerat nunc, sit amet iaculis ipsum lacinia sit amet. Aenean ultrices est odio, eu fermentum
+            sapien
+            rhoncus lacinia.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at elit eu urna consectetur rhoncus in non
+            nibh.
+            Morbi pretium ac orci nec euismod. Donec vitae lorem dictum, malesuada risus sit amet, vulputate turpis.
+            Nullam
+            at enim eget turpis placerat interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam in
+            nunc
+            erat. Duis sodales commodo tortor, et volutpat lorem maximus nec.</p>
+        <p>Pellentesque id eros diam. Nunc semper odio odio, et egestas arcu mattis nec. Sed et imperdiet arcu, vitae
+            auctor
+            nisl. Nunc nec libero odio. Donec a nisl mauris. Suspendisse et urna eu eros ultrices pellentesque vel nec
+            elit.
+            Praesent molestie suscipit orci et tristique. Praesent sed ipsum a justo luctus ornare.</p>
+        <p>Vivamus ultrices nibh eu porttitor tincidunt. Sed non libero fermentum, dictum lectus a, semper ante. Aenean
+            eget
+            ipsum nulla. Maecenas accumsan tortor convallis felis vestibulum accumsan. Aenean tempus gravida enim et
+            mattis.
+            Ut ornare, nibh quis molestie vehicula, enim lacus condimentum nibh, id porttitor diam sem at quam. Fusce a
+            eleifend erat. Vivamus vulputate risus condimentum augue suscipit, nec fringilla augue tincidunt.</p>
+        <p>Maecenas pretium placerat purus, vel rhoncus neque varius ut. Aenean posuere placerat tempor. Integer
+            lobortis
+            libero vitae rutrum mollis. Fusce feugiat ligula nec velit rhoncus accumsan. Donec ut urna nunc. Donec
+            laoreet
+            ultricies enim suscipit luctus. Ut non lectus vitae sapien venenatis varius. Duis maximus dui at dolor
+            pretium
+            suscipit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+            Quisque
+            odio nulla, dapibus et iaculis et, auctor ut leo. Nulla facilisi. In et elit gravida, aliquet ligula sit
+            amet,
+            lacinia arcu. Sed ultrices bibendum fermentum.</p>
+        <p>Donec a elit sagittis, rhoncus lectus vel, semper nisi. Duis sagittis tempor purus blandit posuere.
+            Vestibulum
+            vitae volutpat elit. Donec porttitor, mi vel vulputate laoreet, tellus dolor suscipit leo, et pharetra massa
+            dui
+            ut urna. Pellentesque volutpat, libero sed dapibus aliquet, sapien orci consequat velit, nec ullamcorper
+            elit
+            libero id nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet sed nulla nec
+            dictum.
+            Duis ut pellentesque tellus. Duis accumsan metus eu congue venenatis. Integer sodales, tellus in bibendum
+            cursus, ante ex vestibulum dui, at pretium ipsum augue mollis est. Phasellus rutrum, libero laoreet iaculis
+            accumsan, lorem metus efficitur purus, id vestibulum augue nunc non quam. Etiam vehicula dictum arcu. Sed
+            posuere placerat nunc, sit amet iaculis ipsum lacinia sit amet. Aenean ultrices est odio, eu fermentum
+            sapien
+            rhoncus lacinia.</p>
     </div>
 
-    <!-- Modal needs to be sibling of ALL other page content (i.e. direct child of <body>). -->
-    <div class="modal-overlay" id="modal1">
+    <div class="modal-overlay" id="modal-for-notice">
         <div class="modal hidden">
-            <div
-                class="modal-inner"
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="modal-title">
-                <button id="js-modal-close" onclick="closeModal(this)">Close</button>
+            <div class="modal-inner" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+                <h2 id="modal-for-notice-title">Cookie Notice</h2>
+                <button id="modal-for-notice-close" onclick="closeModal(this)">Close</button>
+
+                <article id="cg-notice" class="cookie-glue-container">
+                    <p>This website uses cookies and similar technologies to improve your online experience and to show
+                        tailored
+                        advertising to you.</p>
+                    <button class="cg-manage-opener">Manage</button> <button onclick="closeModal(this)">Accept</button>
+                    <p>You can view our <a href="#">privacy policy</a> for more information.</p>
+                </article>
+            </div>
+        </div>
+    </div>
+    <!-- Modal needs to be sibling of ALL other page content (i.e. direct child of <body>). -->
+    <div class="modal-overlay" id="modal-for-manage">
+        <div class="modal hidden">
+            <div class="modal-inner" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+                <h2 id="modal-for-manage-title">Cookie Preferences</h2>
+                <button id="modal-for-manage-close" onclick="closeModal(this)">Close</button>
 
                 <!-- TODO - inject modal content dynamically? -->
                 <article id="cg-manage" class="cookie-glue-container" style="display: block">
-                    <h2 id="modal-title">Cookie Preferences</h2>
+                    
                     <ol>
                         <li data-cookie-type="on-mandatory">
-                            <button
-                                name="necessary"
-                                id="cb-necessary"
-                                role='switch'
-                                aria-checked="true" aria-labelledby="cb-necessary-title">
+                            <button name="necessary" id="cb-necessary" role='switch' aria-checked="true"
+                                aria-labelledby="cb-necessary-title">
                                 <span class="toggle-button-wrapper">
-                                    <span class="toggle-button-label">on</span>
+                                    <span class="toggle-button-label" data-lang-on="on" data-lang-off="off">on</span>
                                     <span class="toggle-button-switch"></span>
                                 </span>
                             </button>
@@ -223,13 +287,10 @@
                             <p>Description.</p>
                         </li>
                         <li data-cookie-type="on-optional">
-                            <button
-                                name="performance"
-                                id="cb-performance"
-                                role='switch'
-                                aria-checked="true" aria-labelledby="cb-performance-title">
+                            <button name="performance" id="cb-performance" role='switch' aria-checked="true"
+                                aria-labelledby="cb-performance-title">
                                 <span class="toggle-button-wrapper">
-                                    <span class="toggle-button-label">on</span>
+                                    <span class="toggle-button-label" data-lang-on="on" data-lang-off="off">on</span>
                                     <span class="toggle-button-switch"></span>
                                 </span>
                             </button>
@@ -237,12 +298,10 @@
                             <p>Description.</p>
                         </li>
                         <li data-cookie-type="on-optional">
-                            <button
-                                name="functionality"
-                                id="cb-functionality"
-                                role='switch' aria-checked="true" aria-labelledby="cb-functionality-title">
+                            <button name="functionality" id="cb-functionality" role='switch' aria-checked="true"
+                                aria-labelledby="cb-functionality-title">
                                 <span class="toggle-button-wrapper">
-                                    <span class="toggle-button-label">on</span>
+                                    <span class="toggle-button-label" data-lang-on="on" data-lang-off="off">on</span>
                                     <span class="toggle-button-switch"></span>
                                 </span>
                             </button>
@@ -250,12 +309,10 @@
                             <p>Description.</p>
                         </li>
                         <li data-cookie-type="off-optional">
-                            <button
-                                name="targeting"
-                                id="cb-targeting"
-                                role='switch' aria-checked="false" aria-labelledby="cb-targeting-title">
+                            <button name="targeting" id="cb-targeting" role='switch' aria-checked="false"
+                                aria-labelledby="cb-targeting-title">
                                 <span class="toggle-button-wrapper">
-                                    <span class="toggle-button-label">off</span>
+                                    <span class="toggle-button-label" data-lang-on="on" data-lang-off="off">off</span>
                                     <span class="toggle-button-switch"></span>
                                 </span>
                             </button>
@@ -292,19 +349,6 @@
             console.log('Cookie Glue told me targeting is allowed in the footer.');
         });
 
-        // Toggle button.
-        const handleToggleButton = (e) => {
-            const checked = e.currentTarget.getAttribute('aria-checked') === 'true';
-            let label = e.currentTarget.firstElementChild.childNodes[1];
-            e.currentTarget.setAttribute('aria-checked', !checked);
-            label.textContent = !checked ? 'on' : 'off';
-        };
-
-        const toggleButtons = document.querySelectorAll('[role="switch"]');
-        for (toggle of toggleButtons) {
-            toggle.addEventListener('click', (e) => handleToggleButton(e), false);
-        }
-
         (function () {
             /**
              * Modal.
@@ -328,6 +372,7 @@
              * 2. Add error handling / types?
              */
             function Modal(modalId, focusOnOpen, focusOnClose, closeCallback) {
+                this.closing = false;
                 this.modalOverlay = document.getElementById(modalId);
                 this.modalOnOpenFocus = document.getElementById(focusOnOpen);
                 this.modalOnCloseFocus = document.getElementById(focusOnClose);
@@ -382,7 +427,11 @@
 
                 // Set focus to appropriate element.
                 this.modalOnCloseFocus.focus();
-                console.log('closing', this.closeCallback)
+
+                if (!this.closing) {
+                    this.closing = true;
+                    this.closeCallback();
+                }
             };
 
             // Instantiate Modal.
