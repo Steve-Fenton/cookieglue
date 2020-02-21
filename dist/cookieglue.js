@@ -11,6 +11,7 @@ var __assign = (this && this.__assign) || function () {
 };
 var CookieGlue;
 (function (CookieGlue) {
+    var remberForDays = 31;
     // Toggle button.
     var updateToggleButton = function (e) {
         var checked = e.getAttribute('aria-checked') === 'true';
@@ -84,51 +85,9 @@ var CookieGlue;
         };
         return CheckboxBinder;
     }());
-    var ToggleSwitchBinder = /** @class */ (function () {
-        function ToggleSwitchBinder() {
-        }
-        ToggleSwitchBinder.prototype.uiMapToPreference = function (preferences, input, cookieType) {
-            preferences[input.name] = input.getAttribute('aria-checked') === 'true';
-        };
-        ToggleSwitchBinder.prototype.uiMapFromPreference = function (input, cookieType, cg) {
-            switch (cookieType) {
-                case 'on-mandatory':
-                    input.setAttribute('aria-checked', 'true');
-                    updateToggleButton(input);
-                    input.setAttribute('disabled', 'disabled');
-                    break;
-                case 'on-optional':
-                    if (cg.can(input.name, true)) {
-                        input.setAttribute('aria-checked', 'true');
-                    }
-                    else {
-                        input.setAttribute('aria-checked', 'false');
-                    }
-                    updateToggleButton(input);
-                    break;
-                case 'off-optional':
-                    if (cg.can(input.name, false)) {
-                        input.setAttribute('aria-checked', 'true');
-                    }
-                    else {
-                        input.setAttribute('aria-checked', 'false');
-                    }
-                    updateToggleButton(input);
-                    break;
-                default:
-                    console.log('cookie-glue unknown data-cookie-type', cookieType);
-                    break;
-            }
-        };
-        ToggleSwitchBinder.prototype.uiMapAllOn = function (input) {
-            input.setAttribute('aria-checked', 'true');
-        };
-        return ToggleSwitchBinder;
-    }());
     var ConsentBinder = /** @class */ (function () {
         function ConsentBinder() {
             this.checkboxBinder = new CheckboxBinder();
-            this.ariaSliderBinder = new ToggleSwitchBinder();
         }
         ConsentBinder.prototype.UIMapToPreferences = function (container) {
             var items = container.querySelectorAll('[data-cookie-type]');
@@ -139,12 +98,6 @@ var CookieGlue;
                 var input = item.querySelector('input[type=checkbox]');
                 if (this.isInputElement(input)) {
                     this.checkboxBinder.uiMapToPreference(preferences, input, cookieType);
-                    continue;
-                }
-                var button = item.querySelector('button[aria-checked]');
-                if (this.isButtonElement(button)) {
-                    this.ariaSliderBinder.uiMapToPreference(preferences, button, cookieType);
-                    continue;
                 }
             }
             return preferences;
@@ -157,12 +110,6 @@ var CookieGlue;
                 var input = item.querySelector('input[type=checkbox]');
                 if (this.isInputElement(input)) {
                     this.checkboxBinder.uiMapFromPreference(input, cookieType, cg);
-                    continue;
-                }
-                var button = item.querySelector('button[aria-checked]');
-                if (this.isButtonElement(button)) {
-                    this.ariaSliderBinder.uiMapFromPreference(button, cookieType, cg);
-                    continue;
                 }
             }
         };
@@ -173,12 +120,6 @@ var CookieGlue;
                 var input = item.querySelector('input[type=checkbox]');
                 if (this.isInputElement(input)) {
                     this.checkboxBinder.uiMapAllOn(input);
-                    continue;
-                }
-                var button = item.querySelector('button[aria-checked]');
-                if (this.isButtonElement(button)) {
-                    this.ariaSliderBinder.uiMapAllOn(button);
-                    continue;
                 }
             }
         };
@@ -248,15 +189,19 @@ var CookieGlue;
             // This converts the register into an immediate execution as cookie glue is now loaded
             var data = window[this.name].data;
             window[this.name] = {
-                push: function (t, f, d) { if (_this.can(t, d))
-                    f(); }
+                push: function (consentClassification, yesFunc, noFunc, defaultPermission) {
+                    if (_this.can(consentClassification, defaultPermission)) {
+                        yesFunc();
+                    }
+                    else {
+                        noFunc();
+                    }
+                }
             };
             for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
                 var item = data_1[_i];
                 try {
-                    if (this.can(item.type, item.def)) {
-                        item.script();
-                    }
+                    window[this.name].push(item.t, item.yf, item.nf, item.d);
                 }
                 catch (err) {
                     console.error(err);
@@ -421,7 +366,7 @@ var CookieGlue;
             if (options === void 0) { options = {}; }
             options = __assign({ 
                 /* Defaults */
-                path: '/', samesite: 'strict', 'expires': this.getExpiryDateFromDays(31) }, options);
+                path: '/', samesite: 'strict', 'expires': this.getExpiryDateFromDays(remberForDays) }, options);
             var updatedCookie = encodeURIComponent(this.cookieName) + "=" + encodeURIComponent(value);
             for (var optionKey in options) {
                 var optionValue = options[optionKey];

@@ -114,26 +114,30 @@
         }
     </style>
     <script>
-        var cg = window.cg || { data: [], push: function (t, f, d) { if (d == null) d = false; cg.data.push({ type: t, script: f, def: d }); } };
+        var cg = window.cg || { data: [], push: function (t, yf, nf, d) { if (d == null) d = false; cg.data.push({ t: t, yf: yf, nf: nf, d: d }); } };
 
         cg.push('necessary', function () {
-            // Necessary Scripts Go Here
-            console.log('Cookie Glue told me necessary is allowed in the header.');
+            console.log('necessary allowed header');
+        }, function () {
+            console.log('necessary denied header');
         }, true);
 
-        cg.push('functionality', function () {
-            // Functionality Scripts Go Here
-            console.log('Cookie Glue told me functionality is allowed in the header.');
+        cg.push('performance', function () {
+            console.log('performance allowed header');
+        }, function () {
+            console.log('performance denied header');
         });
 
-        cg.push('performance', function () {
-            // Performance Scripts Go Here
-            console.log('Cookie Glue told me performance is allowed in the header.');
+        cg.push('functionality', function () {
+            console.log('functionality allowed header');
+        }, function () {
+            console.log('functionality denied header');
         });
 
         cg.push('targeting', function () {
-            // Targeting Scripts Go Here
-            console.log('Cookie Glue told me targeting is allowed in the header.');
+            console.log('targeting allowed header');
+        }, function () {
+            console.log('targeting denied header');
         });
     </script>
 </head>
@@ -234,23 +238,27 @@
 
     <script>
         cg.push('necessary', function () {
-            // Necessary Scripts Go Here
-            console.log('Cookie Glue told me necessary is allowed in the footer.');
+            console.log('necessary allowed footer');
+        }, function() {
+            console.log('necessary denied footer');
+        }, true);
+
+        cg.push('performance', function () {
+            console.log('performance allowed footer');
+        }, function() {
+            console.log('performance denied footer');
         });
 
         cg.push('functionality', function () {
-            // Functionality Scripts Go Here
-            console.log('Cookie Glue told me functionality is allowed in the footer.');
-        });
-
-        cg.push('performance', function () {
-            // Performance Scripts Go Here
-            console.log('Cookie Glue told me performance is allowed in the footer.');
+            console.log('functionality allowed footer');
+        }, function() {
+            console.log('functionality denied footer');
         });
 
         cg.push('targeting', function () {
-            // Targeting Scripts Go Here
-            console.log('Cookie Glue told me targeting is allowed in the footer.');
+            console.log('targeting allowed footer');
+        }, function() {
+            console.log('targeting denied footer');
         });
     </script>
     <script async src="/dist/cookieglue.js"></script>

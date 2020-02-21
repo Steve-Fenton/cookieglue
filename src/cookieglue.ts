@@ -4,6 +4,8 @@ interface Window {
 }
 
 namespace CookieGlue {
+    const remberForDays = 31;
+
     // Toggle button.
     const updateToggleButton = (e) => {
         const checked = e.getAttribute('aria-checked') === 'true';
@@ -89,50 +91,8 @@ namespace CookieGlue {
         }
     }
 
-    class ToggleSwitchBinder {
-        uiMapToPreference(preferences: ConsentPreferences, input: HTMLButtonElement, cookieType: string) {
-            preferences[input.name] = input.getAttribute('aria-checked') === 'true';
-        }
-
-        uiMapFromPreference(input: HTMLButtonElement, cookieType: string, cg: CookieGlueApp) {
-            switch (cookieType) {
-                case 'on-mandatory':
-                    input.setAttribute('aria-checked', 'true');
-                    updateToggleButton(input);
-                    input.setAttribute('disabled', 'disabled');
-                    break;
-                case 'on-optional':
-                    if (cg.can(input.name, true)) {
-                        input.setAttribute('aria-checked', 'true');
-                    } else {
-                        input.setAttribute('aria-checked', 'false');
-                    }
-                    updateToggleButton(input);
-                    break;
-                case 'off-optional':
-                    if (cg.can(input.name, false)) {
-                        input.setAttribute('aria-checked', 'true');
-                    } else {
-                        input.setAttribute('aria-checked', 'false');
-                    }
-                    updateToggleButton(input);
-                    break;
-                default:
-                    console.log('cookie-glue unknown data-cookie-type', cookieType);
-                    break;
-            }
-
-
-        }
-
-        uiMapAllOn(input: HTMLButtonElement) {
-            input.setAttribute('aria-checked', 'true');
-        }
-    }
-
     class ConsentBinder {
         private checkboxBinder = new CheckboxBinder();
-        private ariaSliderBinder = new ToggleSwitchBinder();
 
         public UIMapToPreferences(container: HTMLElement): ConsentPreferences {
             const items = container.querySelectorAll('[data-cookie-type]');
@@ -146,14 +106,6 @@ namespace CookieGlue {
 
                 if (this.isInputElement(input)) {
                     this.checkboxBinder.uiMapToPreference(preferences, input, cookieType);
-                    continue;
-                }
-
-                const button = item.querySelector('button[aria-checked]');
-
-                if (this.isButtonElement(button)) {
-                    this.ariaSliderBinder.uiMapToPreference(preferences, button, cookieType);
-                    continue;
                 }
             }
 
@@ -170,14 +122,6 @@ namespace CookieGlue {
 
                 if (this.isInputElement(input)) {
                     this.checkboxBinder.uiMapFromPreference(input, cookieType, cg);
-                    continue;
-                }
-
-                const button = item.querySelector('button[aria-checked]');
-
-                if (this.isButtonElement(button)) {
-                    this.ariaSliderBinder.uiMapFromPreference(button, cookieType, cg);
-                    continue;
                 }
             }
         }
@@ -192,14 +136,6 @@ namespace CookieGlue {
 
                 if (this.isInputElement(input)) {
                     this.checkboxBinder.uiMapAllOn(input);
-                    continue;
-                }
-
-                const button = item.querySelector('button[aria-checked]');
-
-                if (this.isButtonElement(button)) {
-                    this.ariaSliderBinder.uiMapAllOn(button);
-                    continue;
                 }
             }
         }
@@ -273,14 +209,18 @@ namespace CookieGlue {
             // This converts the register into an immediate execution as cookie glue is now loaded
             const data = window[this.name].data;
             window[this.name] = {
-                push: (t: string, f: Function, d: boolean) => { if (this.can(t, d)) f(); }
+                push: (consentClassification: string, yesFunc: Function, noFunc: Function, defaultPermission: boolean) => {
+                    if (this.can(consentClassification, defaultPermission)) {
+                        yesFunc();
+                    } else {
+                        noFunc();
+                    }
+                 }
             }
 
             for (const item of data) {
                 try {
-                    if (this.can(item.type, item.def)) {
-                        item.script();
-                    }
+                    window[this.name].push(item.t, item.yf, item.nf, item.d);
                 } catch (err) {
                     console.error(err);
                 }
@@ -467,7 +407,7 @@ namespace CookieGlue {
                 /* Defaults */
                 path: '/',
                 samesite: 'strict',
-                'expires': this.getExpiryDateFromDays(31),
+                'expires': this.getExpiryDateFromDays(remberForDays),
                 /* Overrides */
                 ...options
             };

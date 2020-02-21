@@ -37,17 +37,22 @@ Include this script on your page.
 You can register any number of scripts to be conditionally run if consent has been granted.
 
     // Include this once on your page, inline
-    var cg = window.cg || { data: [], push: function(t,f,d) { if (d == null) d = false; cg.data.push({ type: t, script: f, def: d}); }};
+    var cg = window.cg || { data: [], push: function (t, yf, nf, d) { if (d == null) d = false; cg.data.push({ t: t, yf: yf, nf: nf, d: d }); } };
 
     // Use cg.push to register scripts
 
     cg.push('necessary', function () {
-        // Some necessary script
+        console.log('necessary allowed header');
+    }, function() {
+        console.log('necessary denied header');
     }, true);
 
     cg.push('performance', function () {
-        // Google Analytics Script Here
+        console.log('performance allowed header');
+    }, function() {
+        console.log('performance denied header');
     });
+
 
 The normal behaviour of cookie glue is that scripts are not run until consent is obtained. This is the best option for any script that will come under GRPD, etc.
 
@@ -69,12 +74,16 @@ What's this "performance" string? We'll talk more about this shortly, but you ca
 
     // Strict
     cg.push('necessary', function () {
-        // Some necessary script
+        console.log('necessary allowed header');
+    }, function() {
+        console.log('necessary denied header');
     });
 
-    // LAx
+    // Lax
     cg.push('necessary', function () {
-        // Some necessary script
+        console.log('necessary allowed header');
+    }, function() {
+        console.log('necessary denied header');
     }, true);
 
 Because we passed `true` in the above example, if consent has not yet been obtained, the script will run. When consent is collected later, and the consent is not given for a category, the script will no longer be run. Any cookies stored on the initial run will still be present. This is also true if a user later changes their preferences - it only applies to subsequent page loads.
